@@ -1,0 +1,383 @@
+@import '../../css/root.css';
+
+$tabs-height: 36px;
+$section-gap: calc($gap);
+$section-height: 256px;
+
+$section-divider-blender: blend($background-grey 80%);
+$section-outline-blender: blend($background-grey 50%);
+
+$button-gap: calc(2 * $gap);
+$button-init-gap: calc(4 * $gap);
+
+/* Images */
+$cross: '../../../img/icons/cross.svg';
+$rename: '../../../img/icons/rename.svg';
+
+@mixin section-color($color) {
+  .section {
+    border: 2px solid color-mod($color $section-outline-blender);
+
+    .blockHolder {
+      /* Left and right divider in a section */
+      box-shadow: -2px 0 0 0 color-mod($color $section-divider-blender);
+    }
+
+    .sectionControls {
+      div {
+        background-color: $color;
+      }
+    }
+  }
+
+  .addButton {
+    background-color: $color;
+  }
+}
+
+#tabs {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#tabList {
+  position: relative;
+  height: calc($tabs-height + $gap);
+  width: 100%;
+  list-style: none;
+  white-space: nowrap;
+  box-sizing: border-box;
+  overflow: hidden;
+  z-index: 200000;
+  padding: 0 $gap;
+  pointer-events: none;
+
+  /* &.activeVariable { */
+  /*   border-bottom: 2px solid $variable; */
+  /* } */
+
+  /* &.activeFunction { */
+  /*   border-bottom: 2px solid $function; */
+  /* } */
+
+  /* &.activeObject { */
+  /*   border-bottom: 2px solid $object; */
+  /* } */
+
+  .tab {
+    display: inline-block;
+    text-align: center;
+    margin: 0 auto auto 0;
+    max-width: 124px;
+    width: calc(33.33% - 2px);
+    font-size: $normal;
+    font-weight: $regular;
+    letter-spacing: 0.03rem;
+    line-height: 100%;
+    padding: calc(18px - $normal / 2) 0;
+    border-collapse: separate;
+    border-radius: $radius;
+    color: #fff;
+    user-select: none;
+    cursor: pointer;
+    pointer-events: initial;
+
+    &:not(:first-of-type) {
+      margin-left: $tiny-gap;
+    }
+
+    &.variable {
+      background-color: color-mod($variable a($fade-op));
+      /* border-radius: $radius 0 0 $radius; */
+    }
+
+    &.function {
+      background-color: color-mod($function a($fade-op));
+    }
+
+    &.object {
+      background-color: color-mod($object a($fade-op));
+      /* border-radius: 0 $radius $radius 0; */
+
+      /* ! Lock object tab */
+      cursor: not-allowed;
+      &::after {
+        content: ' WIP';
+        font-weight: $light;
+        font-style: italic;
+        font-size: 0.7rem;
+      }
+    }
+  }
+
+  .activeTab {
+    font-weight: $medium;
+
+    &.variable {
+      background-color: $variable;
+    }
+
+    &.function {
+      background-color: $function;
+    }
+
+    &.object {
+      background-color: $object;
+    }
+  }
+}
+
+.tabContent {
+  position: relative;
+  width: calc(100% - $gap - $gap);
+  height: calc(100% - $tabs-height);
+  margin: 0 $gap;
+  overflow-y: scroll;
+  text-align: center;
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &.variableContent {
+    @include section-color($variable);
+  }
+
+  &.functionContent {
+    @include section-color($function);
+  }
+
+  &.objectContent {
+    @include section-color($object);
+  }
+
+  &::-webkit-scrollbar {
+    /* TODO: Add customized styling to indicate current position */
+    width: 0;
+  }
+
+  .addButton {
+    margin: $button-gap auto 54px auto;
+    text-align: center;
+    height: $tabs-height;
+    width: 77px;
+    font-size: $normal;
+    font-weight: $medium;
+    letter-spacing: 0.03rem;
+    color: #fff;
+    border-radius: $radius;
+    user-select: none;
+    cursor: pointer;
+  }
+
+  .addButton:only-child {
+    margin-top: $button-init-gap;
+  }
+
+  .addButton:hover {
+    opacity: $hover-op;
+  }
+}
+
+.section {
+  display: flex;
+  position: relative;
+  width: 100%;
+  min-width: $block-width;
+  height: $section-height;
+  min-height: calc($line-height + $block-alphabet-height + $small-gap);
+  max-height: 450px;
+  margin: 0;
+  border-radius: $radius;
+  white-space: nowrap;
+  margin-right: 0;
+  background-color: $background-grey;
+  overflow: hidden;
+
+  &:not(:first-of-type) {
+    margin-top: $section-gap;
+  }
+
+  .codeCanvasHolder {
+    position: relative;
+    display: inline-block;
+    width: calc(100% - $block-width);
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    /* Special styles compare to original codeCanvas */
+    .wireBackground {
+      stroke: $background-grey;
+    }
+  }
+
+  .blockHolder {
+    position: relative;
+    width: $block-width;
+    height: 100%;
+    z-index: 180000;
+    border: none;
+
+    /* When in factory preview, the cursor should be grab instead of pointer */
+    .block {
+      cursor: grab !important;
+    }
+
+    .blockName {
+      border-radius: $radius $radius 0 0;
+    }
+
+    .blockName,
+    .sudoBlock {
+      pointer-events: none;
+    }
+
+    .node {
+      user-select: none;
+    }
+
+    .invalid-block-name {
+      /* background-color: color-mod($alert a($hover-op)) !important; */
+      color: $alert;
+    }
+  }
+
+  .sectionResizeBar {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    height: 3px;
+    cursor: ns-resize;
+    z-index: 190000;
+  }
+
+  /* Buttons */
+  .sectionControls {
+    position: absolute;
+    display: inline-flex;
+    top: 0;
+    right: 0;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 180001;
+
+    div {
+      cursor: pointer;
+    }
+
+    .sectionIcon {
+      position: relative;
+      float: right;
+      width: $icon-size;
+      height: $icon-size;
+      margin: 18px 18px auto 0;
+    }
+
+    .sectionDelete {
+      mask: url($cross) no-repeat center;
+    }
+
+    .sectionRename {
+      mask: url($rename) no-repeat center;
+    }
+  }
+
+  &:hover .sectionControls {
+    pointer-events: auto;
+    opacity: 1;
+  }
+}
+
+.variable {
+  background-color: $variable;
+}
+
+.function {
+  background-color: $function;
+}
+
+.object {
+  background-color: $object;
+}
+
+.separator {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: $background-grey;
+  z-index: 1;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  width: $gap;
+  height: 100%;
+  user-select: none;
+  cursor: ew-resize;
+}
+
+.foldIcon {
+  position: absolute;
+  bottom: $gap;
+  left: 100%;
+  height: calc($gap * 2 + $icon-total-size);
+  width: calc($gap * 2 + $icon-total-size);
+  background-color: none;
+  z-index: 1;
+
+  .fold-svg-holder {
+    visibility: hidden;
+    opacity: 0;
+    display: inline-flex;
+    position: relative;
+    width: $icon-total-size;
+    height: $icon-total-size;
+    background-color: $background-grey;
+    margin: $gap;
+    padding: 0;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 18px;
+    border: $regular-border;
+    box-shadow: $regular-shadow;
+    transition: visibility 0.2s linear, opacity 0.2s linear;
+
+    img {
+      display: block;
+      width: $icon-size;
+      height: $icon-size;
+      margin: auto;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    &:hover {
+      background-color: $hover-grey;
+    }
+
+    &:active {
+      background-color: $light-grey;
+    }
+
+    &.folded {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.separator:hover {
+  & + .foldIcon .fold-svg-holder {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.foldIcon:hover {
+  .fold-svg-holder {
+    visibility: visible;
+    opacity: 1;
+  }
+}

@@ -1,0 +1,119 @@
+@import '../../css/root.css';
+
+$s-gap: 28px;
+$h-s-gap: 14px;
+
+.blockSearchHolder {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000000;
+  pointer-events: none;
+}
+
+.blockSearch {
+  position: relative;
+  display: block;
+  top: 31vh;
+  left: calc(50vw - $search-bar-width / 2);
+  width: $search-bar-width;
+  height: auto;
+  background-color: color-mod(
+    $background-grey a(0.96)
+  ); /* Search window background */
+  /* backdrop-filter: blur(3px); // TODO: Optimize performance */
+  border-radius: $radius;
+  border: $regular-border;
+  box-shadow: $high-shadow;
+  pointer-events: initial;
+  overflow: hidden;
+}
+
+.searchInput {
+  background: none;
+  margin: 0 0 0 calc($s-gap - 4px);
+  width: calc(100% - $s-gap + 4px);
+  height: $search-bar-height;
+  font-weight: $regular;
+  font-size: $large;
+  color: $dark-grey;
+  box-shadow: 0 1px 0 0 $hover-grey;
+
+  &::placeholder {
+    color: $light-grey;
+  }
+}
+
+.blockList {
+  width: $search-bar-width;
+  height: calc($block-list-height + $block-list-text-height);
+  overflow: hidden;
+  overflow-x: scroll;
+  scroll-behavior: smooth;
+  white-space: nowrap;
+  padding: 0;
+  z-index: -1;
+
+  .searchBlockWrapper {
+    display: inline-flex;
+    text-align: center;
+
+    .wrapper {
+      display: block;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .description {
+      display: flex;
+      align-self: center;
+      color: $light-grey;
+      margin: 0 auto;
+      padding: 0 $h-s-gap;
+
+      div {
+        flex-grow: 1;
+        width: 0;
+        color: inherit;
+        opacity: inherit;
+        font-size: $small-small;
+        white-space: pre-line;
+        line-height: 130%;
+      }
+
+      &.focused {
+        /* color: $grey; */
+        color: #888;
+      }
+    }
+
+    &:first-of-type {
+      margin-left: $h-s-gap;
+    }
+
+    &:last-of-type {
+      margin-right: calc($h-s-gap - 4px);
+    }
+  }
+
+  .blockFill {
+    position: relative;
+    display: flex;
+    width: fit-content;
+    height: $block-list-height;
+    margin: 0 $h-s-gap;
+    white-space: nowrap;
+
+    .sudoBlock {
+      position: relative;
+    }
+  }
+}
+
+.sudoBlock {
+  position: relative;
+}

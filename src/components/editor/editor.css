@@ -1,0 +1,187 @@
+@import '../../css/root.css';
+
+#editor {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+
+.split {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  height: calc(100% - $head-height);
+  min-height: 240px;
+  top: $head-height;
+  left: 0;
+}
+
+#editor-left,
+#editor-right {
+  height: 100%;
+}
+
+@media only screen and (min-width: 1441px) {
+  #editor-left {
+    width: 678px; /* Init left width */
+  }
+
+  #editor-right {
+    width: calc(100% - 678px);
+  }
+}
+
+@media only screen and (max-width: 1441px) and (min-width: 961px) {
+  #editor-left {
+    width: 468px; /* Init left width */
+  }
+
+  #editor-right {
+    width: calc(100% - 468px);
+  }
+}
+
+@media only screen and (max-width: 961px) {
+  #editor-left {
+    width: 230px;
+  }
+
+  #editor-right {
+    width: calc(100% - 230px);
+  }
+}
+
+.editor-left-min-width {
+  min-width: calc($block-width + $gap + $gap + 4px);
+}
+
+#editor-right {
+  min-width: calc($block-width + $gap + $line-numbers-width);
+}
+
+#playground,
+#factory {
+  position: relative;
+  border-radius: $radius;
+  /* overflow: hidden; */
+}
+
+#playground {
+  border: $regular-border;
+  background-color: #fff;
+  width: calc(100% - $gap);
+  height: calc(100% - $gap);
+  margin: 0 $gap $gap 0;
+  overflow: hidden;
+}
+
+.dim-others-all {
+  z-index: 9999990;
+  box-shadow: 0 0 0 100vmax color-mod($black a($op));
+}
+
+#factory {
+  background-color: $background-grey;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-shadow: inset 0 0 9px -2px rgba(0, 0, 0, 0.1);
+  pointer-events: none !important;
+  z-index: 200000;
+}
+
+#logo {
+  position: fixed;
+  width: 32px;
+  height: 32px;
+  top: calc(($head-height - 32px) / 2);
+  right: $gap;
+  z-index: 9999997;
+}
+
+.issueTag {
+  display: inline-block;
+  position: relative;
+  color: $hover-grey;
+  font-size: $small;
+  margin: 0;
+  padding: calc($head-height / 2 - $small / 2) 1rem;
+  white-space: nowrap;
+  vertical-align: top;
+
+  a {
+    color: $hover-grey;
+    text-emphasis: none;
+    text-decoration: none;
+
+    &:hover {
+      color: $light-grey;
+    }
+
+    &:active {
+      color: $grey;
+    }
+  }
+
+  .text-options {
+    display: inline-block;
+    margin-left: 1rem;
+  }
+}
+
+.sup-text {
+  font-size: inherit;
+  color: inherit;
+  vertical-align: top;
+  font-size: smaller;
+}
+
+.fileUpload {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9000000;
+  background-color: color-mod($background-grey a($hover-op));
+  transition: opacity 0.2s;
+}
+
+.yes-opacity {
+  /* backdrop-filter: blur(3px); */
+  opacity: 1;
+}
+
+.addIcon {
+  align-self: center;
+  transition: width 0.2s;
+  height: fit-content;
+  pointer-events: none;
+
+  svg {
+    shape-rendering: geometricPrecision;
+  }
+}
+
+.bigger {
+  width: 70px;
+}
+
+.smaller {
+  width: 50px;
+}
+
+.opaque {
+  opacity: $light-op;
+}

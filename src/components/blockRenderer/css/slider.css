@@ -1,0 +1,186 @@
+@import '../../../css/root.css';
+@import './constants.css';
+
+$slider-width: 176px;
+$thumb-width: 10px;
+$thumb-display-width: 2px;
+$thumb-offset: calc(($thumb-width - $thumb-display-width) / 2); /* 4px */
+
+.blockFill {
+  &.preview {
+    .thumb,
+    .sliderInput {
+      pointer-events: none !important;
+    }
+  }
+
+  &:hover {
+    .sliderInput {
+      pointer-events: initial;
+      opacity: 1 !important;
+    }
+
+    .slider .bottomText:not(.fractionText):not(.stepText) {
+      display: none;
+    }
+
+    .slider .sliderBox .thumb {
+      background-color: $dark-grey;
+    }
+  }
+
+  .sliderWidth {
+    /* For blockList */
+    width: $slider-width;
+  }
+
+  .slider {
+    display: block;
+    width: $slider-width;
+    height: 48px;
+
+    &.draw .rangeBelow {
+      background-color: color-mod($draw a($light-op));
+    }
+
+    &.object .rangeBelow {
+      background-color: color-mod($object a($light-op));
+    }
+
+    &.default .rangeBelow {
+      background-color: color-mod($default a($light-op));
+    }
+
+    .sliderBox {
+      position: relative;
+      display: block;
+      height: calc(48px - $bottom-height - 3px);
+      width: calc(100% - 6px);
+      margin: 3px 3px 0 3px;
+      background-color: #fff;
+      opacity: 1;
+      border-radius: $tiny-tiny-radius;
+      text-align: left;
+      pointer-events: none;
+      overflow: visible;
+
+      .rangeBelow {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        margin: 0 auto auto 0;
+        pointer-events: none;
+      }
+
+      .thumb {
+        position: absolute;
+        height: 29px;
+        width: $thumb-width;
+        top: -1px;
+        padding: 0 $thumb-offset;
+        background-color: $grey; /* Color */
+        background-clip: content-box;
+        pointer-events: initial;
+        user-select: none;
+        transition: background-color 0.2s;
+      }
+
+      .sliderInput {
+        position: absolute;
+        width: 100%;
+        top: 27px;
+        left: 0;
+        opacity: 0;
+        pointer-events: initial;
+      }
+
+      .inputBox {
+        position: absolute;
+        border-radius: $tiny-tiny-radius;
+        height: calc(27px - 2 * $tiny-gap);
+        width: 39px;
+        background-color: #fff !important;
+        text-align: center;
+        font-size: $small;
+        padding-top: 1px;
+        padding-left: 1px;
+        padding-right: 1px;
+      }
+
+      .current {
+        top: calc($tiny-gap + 1px);
+        border: $grey solid 1px;
+        left: calc($thumb-width + $gap);
+        pointer-events: initial !important;
+
+        &::selection {
+          background-color: color-mod($selected a($hover-op));
+          color: #fff;
+        }
+
+        & + span {
+          position: absolute;
+        }
+      }
+
+      .thumbArrow {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        top: calc(50% - 2px);
+        pointer-events: none;
+
+        &.thumbArrowLeft {
+          left: -3px;
+        }
+
+        &.thumbArrowRight {
+          transform: rotate(180deg);
+          right: -3px;
+        }
+      }
+
+      .min {
+        left: 0;
+        border-radius: $tiny-tiny-radius 0 0 $tiny-tiny-radius;
+        pointer-events: initial !important;
+      }
+
+      .step {
+        right: 0;
+        pointer-events: initial !important;
+      }
+
+      .stepText {
+        display: block;
+        position: absolute !important;
+        font-size: $small-small;
+        text-align: right;
+        padding: 4px 0;
+        right: calc(39px + 3px);
+        pointer-events: none;
+      }
+
+      .max {
+        left: calc(39px + 1px);
+        border-radius: 0 $tiny-tiny-radius $tiny-tiny-radius 0;
+        pointer-events: initial !important;
+      }
+
+      .sliderSet {
+        height: 16px;
+        font-size: $small-small;
+        margin: 0;
+        top: 1px;
+        background-color: color-mod($black a($op)) !important;
+        color: #fff;
+
+        &::selection {
+          background-color: #fff;
+          color: $selected;
+        }
+      }
+    }
+  }
+}

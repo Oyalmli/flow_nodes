@@ -1,0 +1,97 @@
+@import 'root.css';
+
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  vertical-align: baseline;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-kerning: none;
+
+  font-family: 'Roboto', Helvetica, sans-serif;
+  color: $black;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  line-height: 100%;
+}
+
+[contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+body {
+  background-color: $background-grey;
+  overflow: hidden;
+}
+
+.emoji {
+  filter: grayscale(100%);
+}
+
+/* ! dev */
+/* .dev { */
+/*   display: none; */
+/* } */
+
+/* For all grab and grabbing... */
+.defaultCursor {
+  cursor: default;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.grab {
+  cursor: grab;
+}
+
+.grabbing {
+  cursor: grabbing !important;
+}
+
+.ewResizing {
+  cursor: ew-resize;
+}
+
+.nodeAdd {
+  cursor: copy;
+}
+
+.textEditing {
+  pointer-events: auto !important;
+  user-select: initial;
+  cursor: text;
+}
+
+.no-events {
+  pointer-events: none !important;
+}
+
+.no-select {
+  user-select: none !important;
+}
+
+.no-opacity {
+  /* display: none; */
+  pointer-events: none;
+  opacity: 0;
+}
+
+.disabledText {
+  color: $light-grey !important;
+  pointer-events: none !important;
+}
+
+.node-disabled {
+  .node {
+    pointer-events: none !important;
+  }
+}

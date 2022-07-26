@@ -1,0 +1,372 @@
+@import '../../../css/root.css';
+@import './constants.css';
+
+@import './inline.css';
+@import './input.css';
+@import './slider.css';
+@import './colorPicker.css';
+@import './comment.css';
+
+$node-2-width: 136px;
+$node-3-width: 150px;
+$node-4-width: 176px;
+$node-5-width: 200px;
+$node-0-1-width: 110px;
+
+.node {
+  position: relative;
+  z-index: 80000;
+  width: $node-size;
+  height: $node-size;
+  pointer-events: initial;
+  padding: $node-padding;
+
+  .nodeDisplay {
+    width: 100%;
+    height: 100%;
+    border-radius: calc($node-size / 2);
+    border: $node-border-style;
+    background-color: #fff;
+    padding: 0;
+    margin: 0;
+    pointer-events: none;
+  }
+}
+
+.blockFill {
+  position: absolute;
+  width: $block-width;
+  height: $line-height;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+
+  &.focused {
+    .block {
+      z-index: 90000;
+    }
+
+    .default {
+      box-shadow: $block-shadow-style color-mod($default a($hover-op)) !important;
+    }
+
+    .variable {
+      box-shadow: $block-shadow-style color-mod($variable a($hover-op));
+    }
+
+    .function {
+      box-shadow: $block-shadow-style color-mod($function a($hover-op));
+    }
+
+    .object {
+      box-shadow: $block-shadow-style color-mod($object a($hover-op));
+    }
+
+    .draw {
+      box-shadow: $block-shadow-style color-mod($draw a($hover-op));
+    }
+
+    .library {
+      box-shadow: $block-shadow-style color-mod($library a($hover-op));
+    }
+  }
+
+  &.preview {
+    .block {
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .node,
+    input {
+      user-select: none;
+      cursor: pointer;
+    }
+
+    textArea {
+      pointer-events: none;
+    }
+  }
+
+  .block {
+    position: absolute;
+    border-radius: $tiny-radius;
+    align-self: center;
+    padding: 0;
+    z-index: 60000;
+
+    .blockName {
+      color: #fff;
+      width: 100%;
+      padding-top: 5px;
+      padding-bottom: 6px;
+      line-height: $normal;
+      font-size: $normal;
+      font-weight: $regular;
+      background-color: rgba(0, 0, 0, 0.05);
+      pointer-events: none;
+      user-select: none;
+      overflow: hidden;
+    }
+
+    .nodesText {
+      line-height: $small;
+      font-size: $small;
+      font-weight: $medium;
+      pointer-events: none;
+    }
+  }
+
+  .default,
+  .defaultConnect {
+    background-color: $default;
+
+    .nodeText {
+      color: color-mod($default blend($black 50%));
+    }
+  }
+
+  .variable,
+  .variableConnect {
+    background-color: $variable;
+
+    .nodeText {
+      color: color-mod($variable blend($black 50%));
+    }
+  }
+
+  .function,
+  .functionConnect {
+    background-color: $function;
+
+    .nodeText {
+      color: color-mod($function blend($black 50%));
+    }
+  }
+
+  .object,
+  .objectConnect {
+    background-color: $object;
+
+    .nodeText {
+      color: color-mod($object blend($black 50%));
+    }
+  }
+
+  .draw,
+  .drawConnect {
+    background-color: $draw;
+
+    .nodeText {
+      color: color-mod($draw blend($black 50%));
+    }
+  }
+
+  .library,
+  .libraryConnect {
+    background-color: $library;
+
+    .nodeText {
+      color: color-mod($library blend($black 50%));
+    }
+  }
+
+  .nodeFill {
+    .defaultNode {
+      border: $node-border-style $default;
+    }
+
+    .variableNode {
+      border: $node-border-style $variable;
+    }
+
+    .functionNode {
+      border: $node-border-style $function;
+    }
+
+    .objectNode {
+      border: $node-border-style $object;
+    }
+
+    .drawNode {
+      border: $node-border-style $draw;
+    }
+
+    .libraryNode {
+      border: $node-border-style $library;
+    }
+
+    .connected {
+      border: $node-border-style $light-grey;
+
+      &.focused {
+        border: $node-border-style $dark-grey;
+      }
+
+      &.selected {
+        border-color: $selected;
+      }
+
+      &.alert {
+        border-color: $alert;
+      }
+    }
+
+    /* Background */
+    .nodeBackground {
+      position: absolute;
+      display: block;
+      z-index: -1;
+      width: calc($node-size - 2 * $node-padding + 2px);
+      height: calc($node-size - 2 * $node-padding + 2px);
+      border-radius: calc(($node-size - 2 * $node-padding + 2px) / 2);
+      /* clip-path: inset(50% 0 0 0); */
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+  }
+
+  .nodes {
+    position: absolute;
+    display: flex;
+    margin: 0 auto;
+    width: 100%;
+
+    .nodeFill {
+      display: inline-block;
+      position: relative;
+
+      .node {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, 0);
+        /* box-shadow: 0 0 3px -1px $grey; */
+      }
+    }
+  }
+
+  .inputNodes {
+    top: calc(- $node-size / 2);
+  }
+
+  .outputNodes {
+    bottom: calc($node-size / 2);
+  }
+
+  .normal {
+    text-align: center;
+
+    .nodesText {
+      display: flex;
+      text-align: center;
+      margin: 0 auto;
+      width: 100%;
+
+      /* .nodeText { */
+      /*   text-edge: cap alphabetic; */
+      /*   leading-trim: both; */
+      /* } */
+    }
+
+    .inputNodesText {
+      margin-top: calc($node-size / 2);
+      margin-bottom: 3px;
+    }
+
+    .outputNodesText {
+      margin-bottom: calc($node-size / 2);
+      margin-top: 3px;
+    }
+
+    /* Block nodes and nodesText widths are smaller than block widths */
+    .blockCount2 {
+      width: 80px;
+
+      &.nodes {
+        margin: auto calc($node-2-width / 2 - 40px);
+      }
+    }
+
+    .blockCount3 {
+      width: 120px;
+
+      &.nodes {
+        margin: auto calc($node-3-width / 2 - 60px);
+      }
+    }
+
+    .blockCount4 {
+      width: 160px;
+
+      &.nodes {
+        margin: auto calc($node-4-width / 2 - 80px);
+      }
+    }
+
+    .count1 {
+      width: 100%;
+    }
+
+    .count2 {
+      width: 50%;
+    }
+
+    .count3 {
+      width: 33.33%;
+    }
+
+    .count4 {
+      width: 25%;
+    }
+
+    .count5 {
+      width: 20%;
+    }
+  }
+
+  /* For .normal blocks */
+  .nodesCount1 {
+    width: $node-0-1-width;
+  }
+
+  .nodesCount2 {
+    width: $node-2-width;
+  }
+
+  .nodesCount3 {
+    width: $node-3-width;
+  }
+
+  .nodesCount4 {
+    width: $node-4-width;
+  }
+
+  .nodesCount5 {
+    width: $node-5-width;
+  }
+
+  .nodesCount0 {
+    width: $node-0-1-width;
+    /* height: 39px; */
+    padding: 7px 0; /* Make the height 39px */
+
+    .blockName {
+      background: none;
+    }
+  }
+}
+
+.disabledComponent {
+  user-select: none !important;
+
+  ::selection {
+    background-color: transparent !important;
+  }
+}
+
+.codeCanvas .sudoBlock {
+  /* For blockList in blockSearch */
+  display: none;
+}

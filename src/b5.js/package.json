@@ -1,0 +1,37 @@
+{
+  "name": "b5.js",
+  "version": "0.1.0",
+  "description": "Read and add magic to b5 files.",
+  "main": "src/app.js",
+  "scripts": {
+    "format": "prettier --write \"**/*.{js,css,json,md}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peilingjiang/b5.js.git"
+  },
+  "author": "Peiling Jiang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/peilingjiang/b5.js/issues"
+  },
+  "homepage": "https://github.com/peilingjiang/b5.js#readme",
+  "devDependencies": {
+    "lint-staged": "^13.0.2",
+    "prettier": "^2.7.1",
+    "simple-git-hooks": "^2.8.0"
+  },
+  "dependencies": {
+    "@tensorflow-models/posenet": "^2.2.2",
+    "@tensorflow/tfjs-backend-webgl": "^3.18.0",
+    "@tensorflow/tfjs-converter": "^3.18.0",
+    "@tensorflow/tfjs-core": "^3.18.0",
+    "matter-js": "^0.18.0"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,css,json,md}": "prettier --write"
+  }
+}

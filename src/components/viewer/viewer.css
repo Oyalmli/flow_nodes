@@ -1,0 +1,156 @@
+@import '../../css/root.css';
+
+$viewer-min-width: 200px;
+$viewer-min-height: 150px;
+$viewer-max-width: 700px;
+$viewer-max-height: 700px;
+
+$mini-size: 22px; /* Size of minimize icon */
+$mini-margin: calc($head-height / 2 - $mini-size / 2);
+/* $expand-size: 22px; */
+
+#viewer {
+  position: absolute;
+  user-select: none;
+  background-color: $background-grey;
+  box-shadow: $regular-shadow;
+  border-radius: $radius;
+  border: $regular-border;
+  z-index: 9999999; /* Above everything */
+
+  /* * Scroll bar */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  .header {
+    user-select: none;
+
+    .mini,
+    .expand {
+      background-color: $light-grey;
+      width: $mini-size;
+      height: $mini-size;
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: $mini-margin;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $grey;
+      }
+
+      &:active {
+        background-color: $dark-grey;
+      }
+    }
+
+    .mini {
+      mask: url('../../../img/icons/mini.svg') no-repeat center;
+    }
+
+    .expand {
+      display: none;
+      mask: url('../../../img/icons/expand.svg') no-repeat center;
+    }
+  }
+
+  /* * Scroll bar */
+  ::-webkit-scrollbar {
+    /* TODO: Add customized styling to indicate current position */
+    width: 0;
+    height: 0;
+    background: transparent;
+  }
+
+  .p5Canvas {
+    margin: 0;
+    padding: 0;
+    pointer-events: all;
+  }
+}
+
+.popup {
+  display: block;
+  min-width: $viewer-min-width;
+  min-height: calc($head-height + $viewer-min-height);
+  top: 51vh;
+  left: 60vw;
+  overflow: auto;
+
+  .viewerCanvas {
+    display: flex;
+    top: $head-height;
+    left: 0;
+    justify-content: center;
+    align-items: center;
+    min-width: $viewer-min-width;
+    min-height: $viewer-min-height;
+    max-width: $viewer-max-width;
+    max-height: $viewer-max-height;
+    overflow: scroll;
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
+  }
+
+  .viewerNoLoop {
+    display: block;
+    width: 400px;
+    height: 150px;
+    pointer-events: none;
+  }
+}
+
+.miniDown {
+  display: flex;
+  top: unset !important;
+  left: unset !important;
+  bottom: calc(2 * $gap);
+  right: calc(2 * $gap);
+  /* opacity: $hover-op; */
+  overflow: hidden;
+
+  /* TODO: Min sizes for normal and mini view */
+  min-width: calc($mini-size + 2 * $mini-margin + $gap) !important;
+  min-height: calc($head-height + $gap) !important;
+
+  .header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: color-mod($background-grey a($high-op));
+    z-index: 1;
+    margin: $tiny-gap;
+    width: calc(100% - 2 * $tiny-gap);
+    border-radius: $tiny-tiny-radius;
+    display: none;
+    cursor: initial;
+  }
+
+  &:hover .header {
+    display: block;
+  }
+
+  .toolbarIcon,
+  .mini {
+    display: none;
+  }
+
+  .viewerCanvas {
+    transform-origin: top left;
+    display: flex;
+    height: fit-content;
+  }
+
+  .viewerNoLoop {
+    display: block;
+    opacity: 0;
+    width: 100px;
+    height: 100px;
+  }
+
+  .expand {
+    display: block !important;
+  }
+}

@@ -1,0 +1,84 @@
+/* Space */
+$gap: 8px;
+$large-gap: 10px;
+$small-gap: 4px;
+$tiny-gap: 3px;
+$radius: 5px;
+$tiny-radius: 4px;
+$tiny-tiny-radius: 3px;
+
+/* Color */
+$near-white: #f7f7f7;
+$background-grey: #f6f6f6;
+$dark-white: #eee;
+$hover-grey: #ddd; /* Default wire grey */
+$light-grey: #ccc; /* Active grey */
+$grey: #999;
+$dark-grey: #555;
+$black: #333;
+
+$default: #ccc;
+$variable: #f7b500;
+$function: #50d764;
+$object: #44d7b6;
+$draw: #f35c87;
+$library: #b55bcd;
+
+$comment: #ffebb7;
+$comment-corner: color-mod($comment blend($black 7%));
+
+$tip: #ffd31d;
+$alert: #cf1b1b;
+$selected: #07689f;
+
+/* Opacity */
+$light-op: 0.25;
+$fade-op: 0.4;
+$op: 0.5;
+$hover-op: 0.8;
+$high-op: 0.9;
+
+/* Font Weight */
+$light: 300;
+$regular: 400;
+$medium: 500;
+$bold: 700;
+
+/* Font Size */
+$normal: 0.875rem; /* 14px */
+$small: 0.75rem; /* 12px */
+$large: 1rem; /* 16px */
+$small-small: 0.65rem; /* 10.72px */
+
+/* Icons */
+$icon-total-size: 36px;
+$icon-size: 18px;
+
+$head-height: calc($icon-total-size + 2 * $gap);
+
+/* codeCanvas */
+$block-width: 210px;
+$line-height: 130px;
+$line-numbers-width: 27px;
+$block-alphabet-height: 27px;
+
+$node-size: 16px;
+$node-border-width: 1px;
+$node-padding: 4px;
+
+/* blockSearch */
+$search-bar-width: 654px;
+$search-bar-height: 52px;
+$block-list-height: 144px;
+$block-list-text-height: 45px;
+
+$regular-border-style: 1px solid;
+$node-border-style: $node-border-width solid;
+$regular-border: $regular-border-style $hover-grey;
+
+$block-shadow-style: 0 2px 11px -2px;
+$regular-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.12);
+$light-shadow: 0 3px 10px 1px rgba(0, 0, 0, 0.1);
+$high-shadow: 0 9px 17px -2px color-mod($black a($light-op));
+
+$target-size: 200px;

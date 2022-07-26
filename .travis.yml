@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - lts/*
+install:
+  - npm install
+  - cd src/b5.js # Install dependencies for b5.js submodule
+  - npm install
+  - cd ../..
+before_script:
+  - npm install -g gulp-cli
+script:
+  - npm test

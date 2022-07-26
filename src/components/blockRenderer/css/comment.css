@@ -1,0 +1,82 @@
+@import '../../../css/root.css';
+@import './constants.css';
+
+$comment-width: 176px;
+$note-line-height: 140%;
+
+$corner-size: 13px;
+
+.blockFill {
+  .commentWidth {
+    /* For sudoBlock */
+    width: $comment-width;
+  }
+
+  &.focused {
+    .comment {
+      clip-path: polygon(
+        0 0,
+        100% 0,
+        100% calc(100% - $corner-size),
+        calc(100% - $corner-size) 100%,
+        0 100%
+      );
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: $corner-size;
+        height: $corner-size;
+        background-color: $comment-corner;
+        z-index: 1;
+      }
+    }
+  }
+
+  .comment {
+    background-color: $comment;
+    display: flex;
+    width: $comment-width;
+    height: fit-content;
+    border-radius: 0 !important;
+    overflow: hidden;
+
+    .writingArea {
+      outline: none;
+      resize: none;
+      display: flex;
+      margin: 3px 3px $bottom-tiny-height;
+      padding: 3px 7px 3px;
+      /* border-radius: $tiny-tiny-radius; */
+      background-color: color-mod($comment blend(#fff 70%));
+      width: calc($comment-width - 6px);
+      height: fit-content;
+      min-height: 27px;
+      max-height: 92px;
+      overflow: hidden;
+      overflow-y: scroll;
+      text-align: left;
+      font-size: $small;
+      color: color-mod($dark-grey blend($comment 20%));
+      font-weight: $regular;
+      line-height: $note-line-height;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        width: 0;
+      }
+    }
+  }
+
+  .grabbing {
+    .writingArea {
+      pointer-events: none;
+    }
+  }
+}
