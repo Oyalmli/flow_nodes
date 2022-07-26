@@ -17,34 +17,59 @@ export default class InputBlock extends Component {
       y,
       inlineData,
       output,
+      input,
+      inputNodes,
       outputNodes,
       collect,
       nodesRef,
       focused,
       selectedNodes,
     } = this.props
+
     return (
       // * string input block is specially long...
       <div
         className={className + (text === 'str' ? ' longInputWidth' : '')}
         data-hints={`${name} block`}
       >
+        {inputNodes && (
+          <div className="nodes inputNodes">
+            <Node
+              nodeClass="input"
+              count={1}
+              type={type}
+              connectType={input[0] !== null ? inputNodes[0].type[0] : null}
+              ref={nodesRef.input[0]}
+              focused={focused}
+              selected={selectedNodes.input.includes('0')}
+              name={name}
+              nodeType={'inputNodes'}
+              hintRefPosition={0}
+              hintSide={'up'}
+              background={true}
+            />
+          </div>
+        )}
         {/* <div className="blockName">{text}</div> */}
-        {inlineData.map(ild => (
-          <InputBox
-            action={action}
-            className={''}
-            thisInlineData={ild}
-            thisDataType={_b5BlocksObject.original[name].inlineData[0].type[1]}
-            inlineDataInd={0}
-            name={name}
-            x={x}
-            y={y}
-            collect={collect}
-            hintRefPosition={0}
-          />
-        ))}
-
+        <div style={{ display: 'flex' }}>
+          {inlineData.map((ild, idx) => (
+            <InputBox
+              key={idx}
+              action={action}
+              className={''}
+              thisInlineData={ild}
+              thisDataType={
+                _b5BlocksObject.original[name].inlineData[idx].type[1]
+              }
+              inlineDataInd={idx}
+              name={name}
+              x={x}
+              y={y}
+              collect={collect}
+              hintRefPosition={idx}
+            />
+          ))}
+        </div>
         <p className="nodeText bottomText">{text}</p>
         {output && (
           <div className="nodes outputNodes">

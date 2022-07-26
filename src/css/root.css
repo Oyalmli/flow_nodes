@@ -8,6 +8,7 @@ $tiny-radius: 4px;
 $tiny-tiny-radius: 3px;
 
 /* Color */
+$white: #fff;
 $near-white: #f7f7f7;
 $background-grey: #f6f6f6;
 $dark-white: #eee;
@@ -17,6 +18,11 @@ $grey: #999;
 $dark-grey: #555;
 $black: #333;
 
+$gen: #419d78;
+$mod: #e0a458;
+$pipe: #4d9de0;
+$func: #5c5d8d;
+$sink: #d36060;
 $default: #ccc;
 $variable: #f7b500;
 $function: #50d764;

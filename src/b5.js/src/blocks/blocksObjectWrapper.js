@@ -1,5 +1,5 @@
-import _b5Blocks from './blocks'
+import _FlowBlocks from './blocks'
 
-const _b5BlocksObject = new _b5Blocks()
+const _b5BlocksObject = new _FlowBlocks()
 
 export default _b5BlocksObject

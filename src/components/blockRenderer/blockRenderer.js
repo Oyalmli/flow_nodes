@@ -170,7 +170,7 @@ class BlockRenderer extends Component {
       draggable,
     } = this.props
 
-    const { text, type, kind, inputNodes, outputNodes, description } =
+    const { text, type, kind, inputNodes, sideNode, outputNodes, description } =
       _b5BlocksObject[source][name]
     let inputNodesCount = inputNodes === null ? 0 : inputNodes.length,
       outputNodesCount = outputNodes === null ? 0 : outputNodes.length
@@ -196,6 +196,7 @@ class BlockRenderer extends Component {
               name={name}
               text={text}
               inlineData={inlineData}
+              sideNode={sideNode}
               output={output}
               outputNodes={outputNodes}
               type={type}
@@ -209,6 +210,46 @@ class BlockRenderer extends Component {
             />
           </>
         )
+        break
+
+      case 'iinput':
+        {
+          const inlineCount = Math.max(inputNodesCount, outputNodesCount)
+          myBlock = (
+            <>
+              {!action && (
+                <div
+                  className={
+                    'sudoBlock' +
+                    (text === 'str' ? ' longInputWidth' : ' inputWidth')
+                  }
+                ></div>
+              )}
+              <InputBlock
+                action={action}
+                className={
+                  'grab block ' + type + ' input inlineCount' + inlineCount
+                }
+                name={name}
+                text={text}
+                input={input}
+                inputNodes={inputNodes}
+                inlineData={inlineData}
+                sideNode={sideNode}
+                output={output}
+                outputNodes={outputNodes}
+                type={type}
+                collect={collect}
+                x={x}
+                y={y}
+                nodesRef={this.nodesRef}
+                focused={focused}
+                selectedNodes={selectedNodes}
+                description={description}
+              />
+            </>
+          )
+        }
         break
       case 'slider':
         myBlock = (

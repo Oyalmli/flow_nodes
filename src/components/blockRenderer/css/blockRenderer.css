@@ -50,6 +50,26 @@ $node-0-1-width: 110px;
       box-shadow: $block-shadow-style color-mod($default a($hover-op)) !important;
     }
 
+    .gen {
+      box-shadow: $block-shadow-style color-mod($gen a($hover-op));
+    }
+
+    .mod {
+      box-shadow: $block-shadow-style color-mod($mod a($hover-op));
+    }
+
+    .pipe {
+      box-shadow: $block-shadow-style color-mod($pipe a($hover-op));
+    }
+
+    .sink {
+      box-shadow: $block-shadow-style color-mod($sink a($hover-op));
+    }
+
+    .func {
+      box-shadow: $block-shadow-style color-mod($func a($hover-op));
+    }
+
     .variable {
       box-shadow: $block-shadow-style color-mod($variable a($hover-op));
     }
@@ -126,6 +146,51 @@ $node-0-1-width: 110px;
     }
   }
 
+  .gen,
+  .genConnect {
+    background-color: $gen;
+
+    .nodeText {
+      color: color-mod($gen blend($white 80%));
+    }
+  }
+
+  .mod,
+  .modConnect {
+    background-color: $mod;
+
+    .nodeText {
+      color: color-mod($mod blend($white 80%));
+    }
+  }
+
+  .pipe,
+  .pipeConnect {
+    background-color: $pipe;
+
+    .nodeText {
+      color: color-mod($pipe blend($white 80%));
+    }
+  }
+
+  .sink,
+  .sinkConnect {
+    background-color: $sink;
+
+    .nodeText {
+      color: color-mod($sink blend($white 80%));
+    }
+  }
+
+  .func,
+  .funcConnect {
+    background-color: $func;
+
+    .nodeText {
+      color: color-mod($func blend($white 80%));
+    }
+  }
+
   .variable,
   .variableConnect {
     background-color: $variable;
@@ -174,6 +239,26 @@ $node-0-1-width: 110px;
   .nodeFill {
     .defaultNode {
       border: $node-border-style $default;
+    }
+
+    .genNode {
+      border: $node-border-style $gen;
+    }
+
+    .modNode {
+      border: $node-border-style $mod;
+    }
+
+    .pipeNode {
+      border: $node-border-style $pipe;
+    }
+
+    .sinkNode {
+      border: $node-border-style $sink;
+    }
+
+    .funcNode {
+      border: $node-border-style $func;
     }
 
     .variableNode {

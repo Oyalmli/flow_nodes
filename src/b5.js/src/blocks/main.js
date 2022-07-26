@@ -1,4 +1,4 @@
-class _b5Blocks {
+class _FlowBlocks {
   constructor() {
     this.custom = {}
     this.library = this.__proto__.library
@@ -6,11 +6,11 @@ class _b5Blocks {
   }
 }
 
-_b5Blocks.prototype.library = {}
+_FlowBlocks.prototype.library = {}
 
 /* --------------------------------- Custom --------------------------------- */
 
-_b5Blocks.prototype.createCustom = function (
+_FlowBlocks.prototype.createCustom = function (
   name,
   type,
   kind,
@@ -34,18 +34,18 @@ _b5Blocks.prototype.createCustom = function (
   }
 }
 
-_b5Blocks.prototype.deleteCustom = function (name) {
+_FlowBlocks.prototype.deleteCustom = function (name) {
   if (this.custom[name]) delete this.custom[name]
 }
 
-_b5Blocks.prototype.cleanCustom = function () {
+_FlowBlocks.prototype.cleanCustom = function () {
   // Delete all custom blocks
   for (let c in this.custom) delete this.custom[c]
 }
 
 /* --------------------------------- Source --------------------------------- */
 
-_b5Blocks.prototype.getSource = function (name) {
+_FlowBlocks.prototype.getSource = function (name) {
   for (let i in this) {
     if (this[i].hasOwnProperty(name)) {
       return i
@@ -54,7 +54,7 @@ _b5Blocks.prototype.getSource = function (name) {
   return null
 }
 
-_b5Blocks.prototype.getBlock = function (name) {
+_FlowBlocks.prototype.getBlock = function (name) {
   const s = this.getSource(name)
   if (!s) return null
   return this[s][name]
@@ -62,7 +62,7 @@ _b5Blocks.prototype.getBlock = function (name) {
 
 /* -------------------------------- Get Names ------------------------------- */
 
-_b5Blocks.prototype.getOriginalNames = function () {
+_FlowBlocks.prototype.getOriginalNames = function () {
   const o = this.original
   return Object.keys(this.original).reduce((result, key) => {
     if (typeof o[key] === 'object' && key !== 'library') {
@@ -72,11 +72,11 @@ _b5Blocks.prototype.getOriginalNames = function () {
   }, [])
 }
 
-_b5Blocks.prototype.getLibraryNames = function () {
+_FlowBlocks.prototype.getLibraryNames = function () {
   return Object.keys(this.library)
 }
 
-_b5Blocks.prototype.getAllBlockNames = function () {
+_FlowBlocks.prototype.getAllBlockNames = function () {
   return [
     ...this.getLibraryNames(),
     ...this.getOriginalNames(),
@@ -84,4 +84,4 @@ _b5Blocks.prototype.getAllBlockNames = function () {
   ]
 }
 
-export default _b5Blocks
+export default _FlowBlocks
