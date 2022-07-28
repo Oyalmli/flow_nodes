@@ -12,7 +12,13 @@ _FlowBlocks.prototype.printf = {
       text: 'In',
       name: 'in',
       description: 'The incoming value',
-      type: ['object', 'number'],
+      type: ['object', 'string'],
+    },
+    {
+      text: 'Fmt',
+      name: 'fmt',
+      description: 'Format string',
+      type: ['object', 'string'],
     },
   ],
   sideNode: [

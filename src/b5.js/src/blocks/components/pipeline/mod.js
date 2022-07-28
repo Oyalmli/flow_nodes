@@ -12,7 +12,7 @@ _FlowBlocks.prototype.take = {
       text: 'In',
       name: 'in',
       description: 'The incoming value',
-      type: ['object', 'number'],
+      type: ['number'],
     },
   ],
   outputNodes: [
@@ -24,6 +24,14 @@ _FlowBlocks.prototype.take = {
     },
   ],
   default: [50, 0], // default here is for default inline data instead of input
+  eval: function (in_idxs, out_idxs, args) {
+    if (out_idxs.length !== 0) return
+    let contained_string = ''
+    for (let o in in_idxs) {
+      contained_string += o + ' '
+    }
+    return `mod::take(${args}, ${contained_string})`
+  },
   run: function (p, o, draw, input, a) {
     o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
   },

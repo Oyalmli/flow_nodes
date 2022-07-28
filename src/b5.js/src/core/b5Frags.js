@@ -129,8 +129,42 @@ export class _functionSectionObject extends _sectionObject {
       this.kind,
       this.inputNodes.details,
       this.outputNodes.details,
+      this.eval,
       this.run
     )
+  }
+
+  eval = (p, o, draw, ...args) => {
+    // Run sub-blocks
+    const effects = {}
+
+    for (let r in this.blocks)
+      for (let c in this.blocks[r])
+        this.blocks[r][c].effectBlockRun(
+          p,
+          effects,
+          r,
+          c,
+          this._getInputArgs(r, c, args),
+          draw
+        )
+
+    for (let r in this.blocks)
+      for (let c in this.blocks[r])
+        this.blocks[r][c].blockRun(
+          p,
+          effects,
+          r,
+          c,
+          this._getInputArgs(r, c, args),
+          draw
+        )
+
+    // * No need for this.output
+    for (let i in this.outputNodes.positions) {
+      const [y, x, node] = this.outputNodes.positions[i]
+      o[i] = this.blocks[y][x].output[node]
+    }
   }
 
   run = (p, o, draw, ...args) => {
@@ -205,7 +239,7 @@ export class _blockObject {
   }
 
   async blockInit() {
-    const init = _b5BlocksObject[this.source][this.name].init
+    const init = _b5BlocksObject[this.source][this.name]?.init
     if (init) this.output = await init()
   }
 
@@ -288,7 +322,7 @@ export class _blockObject {
   }
 
   blockUnplug() {
-    const unplug = _b5BlocksObject[this.source][this.name].unplug
+    const unplug = _b5BlocksObject[this.source][this.name]?.unplug
     if (unplug) unplug(this.output)
 
     // ! To remove...

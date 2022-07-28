@@ -55,11 +55,13 @@ const HintBlock = (
             </p>
           </>
         ) : (
-          <p className="hint-no-available">no description available : (</p>
+          <p className="hint-no-available">no description available : </p>
         )}
       </div>
 
-      <div className="hint-category">{hintCategory}</div>
+      <div className="hint-category">
+        {hintType === 'object' ? hintCategory : hintType}
+      </div>
     </div>
   )
 }

@@ -61,7 +61,7 @@ class BlockRenderer extends Component {
     this._refreshOutputNodesRef(output)
 
     // Kind of a block should never change
-    this.kind = _b5BlocksObject[props.data.source][props.data.name].kind
+    this.kind = _b5BlocksObject[props.data.source][props.data.name]?.kind
   }
 
   componentDidMount() {
@@ -170,8 +170,12 @@ class BlockRenderer extends Component {
       draggable,
     } = this.props
 
+    let block = _b5BlocksObject[source][name]
+
+    if (!block) return
+
     const { text, type, kind, inputNodes, sideNode, outputNodes, description } =
-      _b5BlocksObject[source][name]
+      block
     let inputNodesCount = inputNodes === null ? 0 : inputNodes.length,
       outputNodesCount = outputNodes === null ? 0 : outputNodes.length
 

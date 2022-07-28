@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { saveAs } from 'file-saver'
 
-import B5Wrapper from './b5CodeViewWrapper.js'
 import { IconList } from '../headers/headers.js'
 import { headerHeight, targetSize } from '../constants.js'
 import { usePrevious } from '../useHooks.js'
@@ -177,7 +176,7 @@ const CodeView = ({ data }) => {
       </div>
 
       {loop ? (
-        <pre style={{ fontSize: '8px' }}>{JSON.stringify(data, null, 2)}</pre>
+        <JTD data={data} />
       ) : (
         <img
           id="viewerNoLoop"

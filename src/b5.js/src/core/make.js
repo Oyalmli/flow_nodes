@@ -16,6 +16,8 @@ export const makeBlock = (name, source = null) => {
 
   const block = _b5BlocksObject[source][name]
 
+  console.log('block', block)
+
   const sudoData = {
     name: name,
     source: source,
@@ -31,6 +33,10 @@ export const makeBlock = (name, source = null) => {
     sudoData.inlineData = []
     let bD = _isFunction(block.default) ? block.default() : block.default
     for (let i in block.inlineData) sudoData.inlineData.push(bD[i])
+  }
+
+  if (block.eval) {
+    sudoData.eval = block.eval
   }
 
   if (block.outputNodes) {

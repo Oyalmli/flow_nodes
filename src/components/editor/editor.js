@@ -225,6 +225,7 @@ export default class Editor extends Component {
             // [name, y, x]
             const [name, y, x] = data
             const newBlock = makeBlock(name)
+            console.log(newBlock)
 
             if (!thisBlocks[y] || !thisBlocks[y][x]) {
               method.addBlock(data, newBlock, thisBlocks)

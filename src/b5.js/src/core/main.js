@@ -143,6 +143,8 @@ b5.prototype.handleBlock = function (
     isSection = true
   }
 
+  console.log(task)
+
   switch (task) {
     case 'addBlock':
       const [addBlockData, y, x] = data

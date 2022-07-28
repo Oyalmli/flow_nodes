@@ -14,10 +14,11 @@ function App() {
   }
 
   //<Viewer data={data} />
-  //<CodeView data={data} />
+  //
   return (
     <>
       <Editor bridge={bridgeData} />
+      <CodeView data={data} />
     </>
   )
 }
