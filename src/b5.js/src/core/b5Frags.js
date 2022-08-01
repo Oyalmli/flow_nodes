@@ -212,10 +212,11 @@ export class _functionSectionObject extends _sectionObject {
 }
 
 export class _blockObject {
-  constructor({ name, source, input, inlineData }, parent) {
+  constructor({ name, source, input, inlineData, _eval }, parent) {
     this.parent = parent
     this.name = name
     this.source = source
+    this._eval = this._eval
     this.input = input ? JSON.parse(JSON.stringify(input)) : null
     this.inlineData = inlineData ? JSON.parse(JSON.stringify(inlineData)) : null
     this.output = {} // LOCAL STORAGE / o

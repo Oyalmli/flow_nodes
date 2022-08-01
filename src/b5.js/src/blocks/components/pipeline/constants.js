@@ -17,6 +17,9 @@ _FlowBlocks.prototype.string = {
     },
   ],
   default: ['%d\\n'],
+  eval_block: function (inp) {
+    return inp
+  },
   run: function (p, o, draw, a) {
     o[0] = valid(a, this.default[0])
   },

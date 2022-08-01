@@ -17,8 +17,12 @@ _FlowBlocks.prototype.range = {
     },
   ],
   default: [0, 1, 1],
-  function_string: function (in_idxs, out_idxs, args) {
-    return `range(${args})`
+  eval_block: {
+    pipeline_type: 'gen',
+    type: 'function',
+    func: data => {
+      return `gen::range(${data})`
+    },
   },
   run: function (p, o, draw, a) {
     o[0] = valid(a, this.default[0])

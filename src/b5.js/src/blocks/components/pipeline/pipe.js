@@ -30,6 +30,13 @@ _FlowBlocks.prototype.transform = {
     },
   ],
   default: [0, null],
+  eval_block: {
+    pipeline_type: 'pipe',
+    type: 'function',
+    func: args => {
+      return `pipe::transform(${args.func})`
+    },
+  },
   run: function (p, o, draw, a) {
     o[0] = valid(a, this.default[0])
   },
@@ -72,5 +79,12 @@ _FlowBlocks.prototype.partition = {
   default: [0, null],
   run: function (p, o, draw, a) {
     o[0] = valid(a, this.default[0])
+  },
+  eval_block: {
+    pipeline_type: 'pipe',
+    type: 'function',
+    func: args => {
+      return `partition(${args.func}, ${args.l}, ${args.r})`
+    },
   },
 }

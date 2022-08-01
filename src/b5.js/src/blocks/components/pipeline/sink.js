@@ -4,34 +4,35 @@ import { valid } from '../../method'
 _FlowBlocks.prototype.printf = {
   text: 'Printf',
   type: 'sink',
-  kind: 'normal',
+  kind: 'iinput',
   source: 'original',
-  description: 'Creates a range from low to high with the given step size',
+  description: 'Take a given number of values from the generator',
   inputNodes: [
     {
       text: 'In',
       name: 'in',
       description: 'The incoming value',
-      type: ['object', 'string'],
-    },
-    {
-      text: 'Fmt',
-      name: 'fmt',
-      description: 'Format string',
-      type: ['object', 'string'],
-    },
-  ],
-  sideNode: [
-    {
-      text: 'Func',
-      name: 'func',
-      description: 'Function to apply',
-      type: ['object', 'func'],
+      type: ['number'],
     },
   ],
   outputNodes: null,
-  default: ['%d\n'],
-  run: function (p, o, draw, a) {
-    o[0] = valid(a, this.default[0])
+  default: ['%d\\n'], // default here is for default inline data instead of input
+  eval_block: {
+    pipeline_type: 'sink',
+    type: 'function',
+    func: data => {
+      return `sink::printf("${data}")`
+    },
   },
+  run: function (p, o, draw, input, a) {
+    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
+  },
+  // 'slider' kind block special
+  inlineData: [
+    {
+      name: 'Take',
+      description: 'Number of values to take',
+      type: ['object', 'string'],
+    },
+  ],
 }

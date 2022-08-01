@@ -17,6 +17,15 @@ _FlowBlocks.prototype.addValue = {
     },
   ],
   default: [0],
+  eval_block: {
+    pipeline_type: 'funcs',
+    type: 'constant',
+    name: 'addValue',
+    variable_name: 'addValue',
+    func: args => {
+      return `auto addValue = [](auto a){ return (a % 2) == 0; }`
+    },
+  },
   run: function (p, o, draw, a) {
     o[0] = valid(a, this.default[0])
   },
@@ -46,6 +55,15 @@ _FlowBlocks.prototype.even = {
     },
   ],
   default: [true],
+  eval_block: {
+    pipeline_type: 'funcs',
+    type: 'constant',
+    name: 'even',
+    variable_name: 'even',
+    func: args => {
+      return `auto even = [](auto a){ return (a % 2) == 0; }`
+    },
+  },
   run: function (p, o, draw, a, b) {
     o[0] = a && b
   },
@@ -67,7 +85,7 @@ _FlowBlocks.prototype.to_string = {
     },
   ],
   default: [0],
-  eval: function () {
+  eval_block: function () {
     return `[](a){ return a.to_string(); }`
   },
   run: function (p, o, draw, a, b) {

@@ -25,7 +25,6 @@ export default class InputBlock extends Component {
       focused,
       selectedNodes,
     } = this.props
-
     return (
       // * string input block is specially long...
       <div
@@ -52,23 +51,24 @@ export default class InputBlock extends Component {
         )}
         {/* <div className="blockName">{text}</div> */}
         <div style={{ display: 'flex' }}>
-          {inlineData.map((ild, idx) => (
-            <InputBox
-              key={idx}
-              action={action}
-              className={''}
-              thisInlineData={ild}
-              thisDataType={
-                _b5BlocksObject.original[name].inlineData[idx].type[1]
-              }
-              inlineDataInd={idx}
-              name={name}
-              x={x}
-              y={y}
-              collect={collect}
-              hintRefPosition={idx}
-            />
-          ))}
+          {inlineData &&
+            inlineData.map((ild, idx) => (
+              <InputBox
+                key={idx}
+                action={action}
+                className={''}
+                thisInlineData={ild}
+                thisDataType={
+                  _b5BlocksObject.original[name].inlineData[idx].type[1]
+                }
+                inlineDataInd={idx}
+                name={name}
+                x={x}
+                y={y}
+                collect={collect}
+                hintRefPosition={idx}
+              />
+            ))}
         </div>
         <p className="nodeText bottomText">{text}</p>
         {output && (

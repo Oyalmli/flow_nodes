@@ -21,6 +21,7 @@ class b5 {
     this.data = data
     this._clear()
     this._init(data)
+    console.log('update', this)
   }
 
   update(data) {
@@ -142,8 +143,6 @@ b5.prototype.handleBlock = function (
     thisObjects = thisParent.blocks
     isSection = true
   }
-
-  console.log(task)
 
   switch (task) {
     case 'addBlock':

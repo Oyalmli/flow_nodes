@@ -5,3 +5,5 @@ import './sink'
 import './constants'
 
 import './funcs'
+import { order } from './helpers'
+export { order }
