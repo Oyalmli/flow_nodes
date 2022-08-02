@@ -2,23 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { CopyBlock, atomOneLight } from 'react-code-blocks'
 import _b5BlocksObject from '../../../../b5.js/src/blocks/blocksObjectWrapper.js'
 
-const all = arr => {
-  return arr.every(input => Object.values(input).some(e => Boolean(e)))
-}
-
-//returns true if the object has input or outpur agruments. For filtering
-const has_args = obj => {
-  try {
-    const { input, output } = obj
-    if (!Boolean(input) && !Boolean(output)) return false
-    if (all(input) || all(output)) return false
-    return true
-  } catch {
-    return false
-  }
-  return true
-}
-
 const zip = (a, b) =>
   Array.from(Array(Math.max(b.length, a.length)), (_, i) => [a[i], b[i]])
 
@@ -70,10 +53,6 @@ const connected_components = (nodes, blocks) => {
     }
   }
   return ccs
-}
-
-const idx_to_block = ([y, x], blocks) => {
-  return blocks?.[y]?.[x]
 }
 
 const traverse = (args, root, nodes, blocks) => {
@@ -187,8 +166,8 @@ const create_view = view => {
   if (!view) return ''
   let res = 'using namespace dfl; \nint main() {\n'
   for (const { blocks, functions, variables } of view) {
-    res += to_str(variables, '\n;')
-    res += to_str(functions, '\n;')
+    res += to_str(variables, ';\n')
+    res += to_str(functions, ';\n')
     res += to_str(blocks, '\n>>= ')
     res += '\n'
   }

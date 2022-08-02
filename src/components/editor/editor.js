@@ -675,26 +675,37 @@ export default class Editor extends Component {
           />
 
           <p className="dev issueTag">
-            v{method.parseVersion(packageJSON.version, true)}
-            <span className="text-options">
-              <a
-                href="https://www.jpl.design/b5"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                learn more
-              </a>
-            </span>
-            <span className="text-options">
-              <a
-                href="https://github.com/peilingjiang/b5/issues/new"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                report issue
-              </a>
-            </span>
+            <a
+              href="https://www.jpl.design/b5"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              how to use
+            </a>
           </p>
+          {false && (
+            <p className="dev issueTag">
+              v{method.parseVersion(packageJSON.version, true)}
+              <span className="text-options">
+                <a
+                  href="https://www.jpl.design/b5"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  learn more
+                </a>
+              </span>
+              <span className="text-options">
+                <a
+                  href="https://github.com/peilingjiang/b5/issues/new"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  report issue
+                </a>
+              </span>
+            </p>
+          )}
 
           <a
             href="https://github.com/peilingjiang/b5"

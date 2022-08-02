@@ -23,7 +23,7 @@ _FlowBlocks.prototype.addValue = {
     name: 'addValue',
     variable_name: 'addValue',
     func: args => {
-      return `auto addValue = [](auto a){ return (a % 2) == 0; }`
+      return `auto addValue = [](auto a){ return a + ${args}; }`
     },
   },
   run: function (p, o, draw, a) {
