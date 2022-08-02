@@ -277,16 +277,12 @@ export default class CodeBlocks extends Component {
               (ioEnd === 'output' && endBlockInd[0] >= startBlockInd[0])
             )
               return
-            console.log(this.props)
             // Node can only send output to one node
-            {
-              const [row, col] = startBlockInd
-              const { output } = this.props.data[row][col]
-              if (output) {
-                for (const out of Object.values(output)) {
-                  if (out.length > 0) return
-                }
-              }
+
+            const [row, col] = startBlockInd
+            const { output } = this.props.data[row][col]
+            if (output && output[sN.startNodeInd].length > 0) {
+              return
             }
 
             // StartNode must have a lower or equal order to EndNode
@@ -295,7 +291,6 @@ export default class CodeBlocks extends Component {
               const StartNode = this.props.data[row_s][col_s]
               const [row_e, col_e] = endBlockInd
               const EndNode = this.props.data[row_e][col_e]
-              console.log(StartNode, EndNode, order)
             }
 
             // Collect - output data first, input data follows

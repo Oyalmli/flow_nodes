@@ -100,7 +100,6 @@
 
 #logo {
   position: fixed;
-  width: 32px;
   height: 32px;
   top: calc(($head-height - 32px) / 2);
   right: $gap;

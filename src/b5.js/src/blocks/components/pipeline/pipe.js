@@ -34,7 +34,8 @@ _FlowBlocks.prototype.transform = {
     pipeline_type: 'pipe',
     type: 'function',
     func: args => {
-      return `pipe::transform(${args.func})`
+      console.log('ARGS', args)
+      return `pipe::transform(${args})`
     },
   },
   run: function (p, o, draw, a) {

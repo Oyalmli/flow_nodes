@@ -52,13 +52,21 @@ const dfs = (temp, node, visited, blocks) => {
   return temp
 }
 
+const iter_nodes = obj => {
+  const res = Object.values(obj)
+    .map(o => Object.values(o).flat())
+    .flat()
+  return res
+}
+
 const connected_components = (nodes, blocks) => {
   let visited = new DefaultDict(false)
   let ccs = []
-  for (const node of nodes) {
+
+  for (const node of iter_nodes(blocks)) {
     if (visited[node.uuid] === false) {
       let temp = []
-      ccs.push(dfs(temp, node, visited, blocks))
+      ccs.push(dfs(temp, node, visited, nodes))
     }
   }
   return ccs
@@ -86,14 +94,29 @@ const traverse = (args, root, nodes, blocks) => {
   return body
 }
 
-const eval_blocks = (order, blocks) => {
+const get_block = (arr, row, col) => {
+  return arr[row][col]
+}
+
+const eval_blocks = (order, nodes, blocks) => {
   let result = {
     variables: [],
     functions: [],
     blocks: [],
   }
+  console.log(order, nodes)
   const get_data = block => {
-    return block.inlineData ?? [0]
+    const { input } = block
+    if (input) {
+      for (let [row, col] of Object.values(input).slice(1)) {
+        const b = get_block(nodes, row, col)
+        if (b.type === 'func') {
+          return b.name
+        }
+        return get_data(b)
+      }
+    }
+    return block.inlineData
   }
   const get_type = type => {
     return {
@@ -101,12 +124,9 @@ const eval_blocks = (order, blocks) => {
       function: 'blocks',
     }[type]
   }
-  console.log('blocks', blocks)
-  console.log(order)
   for (let block of order) {
     const { type = '', func = '' } = blocks[block.name]?.eval_block
     const data = get_data(block)
-
     result[get_type(type)].push(func(data))
   }
   return result
@@ -122,7 +142,7 @@ const all_populated = components => {
     }
     if (output) {
       const outputArr = Object.values(output)
-      ok &= outputArr[0]?.length > 0
+      ok &= outputArr?.every(e => e.length > 0)
     }
     if (!ok) return false
   }
@@ -134,25 +154,25 @@ const loop = grid => {
   const blocks = grid?.playground?.blocks
   if (!blocks) return
 
-  let nodes = []
+  let nodes = {}
   for (let [i, row] of Object.entries(blocks)) {
     for (let [j, cell] of Object.entries(row)) {
       if (cell) {
-        nodes.push({ ...cell, row: i, col: j })
+        if (!nodes[i]) nodes[i] = {}
+        nodes[i][j] = { ...cell, row: i, col: j }
       }
     }
   }
-
   const ccs = connected_components(nodes, blocks)
-
-  const bs = {
+  console.log(ccs)
+  const blockData = {
     ..._b5BlocksObject.original,
     ..._b5BlocksObject.custom,
     ..._b5BlocksObject.library,
   } // Merge all available blocks
   let res = []
   for (let cc of ccs) {
-    all_populated(cc) && res.push(eval_blocks(cc, bs))
+    all_populated(cc) && res.push(eval_blocks(cc, nodes, blockData))
   }
   return res
 }

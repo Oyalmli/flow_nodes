@@ -2,8 +2,8 @@
 
 $viewer-min-width: 200px;
 $viewer-min-height: 150px;
-$viewer-max-width: 700px;
-$viewer-max-height: 700px;
+$viewer-max-width: 200px;
+$viewer-max-height: 150px;
 
 $mini-size: 22px; /* Size of minimize icon */
 $mini-margin: calc($head-height / 2 - $mini-size / 2);

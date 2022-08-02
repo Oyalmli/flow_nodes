@@ -162,12 +162,14 @@ const CodeView = ({ data }) => {
     <div ref={viewer} id="viewer" className="viewer popup">
       {/* popup is the default status of the viewer window */}
       <div ref={viewerHeader} className="header grab">
-        <IconList
-          iconsName={[loop ? 'NoLoop' : 'Loop', 'Refresh', 'Capture']}
-          iconsOnClickFunc={[toggleLoop, refreshCanvas, captureCanvas]}
-          iconsDisabled={[false, !loop, !loop]}
-          functions={null}
-        />
+        {false && (
+          <IconList
+            iconsName={[loop ? 'NoLoop' : 'Loop', 'Refresh', 'Capture']}
+            iconsOnClickFunc={[toggleLoop, refreshCanvas, captureCanvas]}
+            iconsDisabled={[false, !loop, !loop]}
+            functions={null}
+          />
+        )}
 
         {/* Minimize */}
         <div onClick={_handleMinimize} className="mini"></div>

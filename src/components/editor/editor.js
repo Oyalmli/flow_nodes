@@ -27,7 +27,7 @@ import {
 } from './defaultValue.js'
 import Hint from '../hint/hint.js'
 
-import Logo from '../../img/logo/logo.svg'
+import Logo from '../../img/logo/name_logo.png'
 
 // For loading the version number
 import packageJSON from '../../../package.json'
@@ -225,7 +225,6 @@ export default class Editor extends Component {
             // [name, y, x]
             const [name, y, x] = data
             const newBlock = makeBlock(name)
-            console.log(newBlock)
 
             if (!thisBlocks[y] || !thisBlocks[y][x]) {
               method.addBlock(data, newBlock, thisBlocks)
@@ -702,7 +701,7 @@ export default class Editor extends Component {
             rel="noopener noreferrer"
             target="_blank"
           >
-            <img id="logo" src={Logo} alt="b5" />
+            <img id="logo" src={Logo} alt="FlowNodes" />
           </a>
         </div>
 

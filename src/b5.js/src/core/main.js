@@ -21,7 +21,6 @@ class b5 {
     this.data = data
     this._clear()
     this._init(data)
-    console.log('update', this)
   }
 
   update(data) {
