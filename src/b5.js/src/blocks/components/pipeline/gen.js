@@ -19,7 +19,7 @@ _FlowBlocks.prototype.range = {
   default: [0, 1, 1],
   eval_block: {
     pipeline_type: 'gen',
-    type: 'function',
+    type: 'component',
     func: data => {
       return `gen::range(${data})`
     },

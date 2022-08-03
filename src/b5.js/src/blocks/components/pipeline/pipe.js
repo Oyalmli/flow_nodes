@@ -32,9 +32,8 @@ _FlowBlocks.prototype.transform = {
   default: [0, null],
   eval_block: {
     pipeline_type: 'pipe',
-    type: 'function',
+    type: 'component',
     func: args => {
-      console.log('ARGS', args)
       return `pipe::transform(${args})`
     },
   },
@@ -83,9 +82,12 @@ _FlowBlocks.prototype.partition = {
   },
   eval_block: {
     pipeline_type: 'pipe',
-    type: 'function',
-    func: args => {
-      return `partition(${args.func}, ${args.l}, ${args.r})`
+    type: 'component',
+    func: ([func, l = 'l', r = 'r']) => {
+      return `partition(${func}
+        , ${l}
+        , ${r}
+        )`
     },
   },
 }

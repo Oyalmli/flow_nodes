@@ -19,7 +19,7 @@ _FlowBlocks.prototype.printf = {
   default: ['%d\\n'], // default here is for default inline data instead of input
   eval_block: {
     pipeline_type: 'sink',
-    type: 'function',
+    type: 'component',
     func: data => {
       return `sink::printf("${data}")`
     },

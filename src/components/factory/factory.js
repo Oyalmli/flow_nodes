@@ -3,30 +3,31 @@ import equal from 'react-fast-compare'
 
 import { TabList, TabContent } from './factoryFrags.js'
 import '../../postcss/components/factory/factory.css'
+import JTD from '../codeView/components/JsonToDFL/JTD.js'
 
 export default class Factory extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
-      activeTab: 'variable',
+      activeTab: 'code',
     }
     /*
     All data from each tab of the factory will be stored here as a whole.
     Including { lineStyles, blocks } from all codeCanvas of each section
     from each tab.
     */
-    this.allTabs = ['variable', 'function', 'object']
+    this.allTabs = ['code', 'variable', 'function']
   }
 
   onClickTab = tab => {
     // ! Lock object tab
-    if (tab !== 'object') this.setState({ activeTab: tab })
+    this.setState({ activeTab: tab })
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return !equal(nextProps, this.props) || !equal(nextState, this.state)
   }
-
   render() {
     const {
       allTabs,
@@ -45,16 +46,20 @@ export default class Factory extends Component {
           activeTab={activeTab}
         />
 
-        <TabContent
-          type={activeTab}
-          data={this.props.data[activeTab]} // Array of objects
-          canvasStyle={this.props.canvasStyle[activeTab]}
-          section={this.props.section}
-          collect={collect}
-          collectStyle={collectStyle}
-          factoryCodeCanvasRef={factoryCodeCanvasRef}
-          hardRefresh={hardRefresh}
-        />
+        {this.state.activeTab === 'code' ? (
+          <JTD data={this.props.d} />
+        ) : (
+          <TabContent
+            type={activeTab}
+            data={this.props.data[activeTab]} // Array of objects
+            canvasStyle={this.props.canvasStyle[activeTab]}
+            section={this.props.section}
+            collect={collect}
+            collectStyle={collectStyle}
+            factoryCodeCanvasRef={factoryCodeCanvasRef}
+            hardRefresh={hardRefresh}
+          />
+        )}
       </>
     )
   }

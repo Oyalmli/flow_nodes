@@ -726,6 +726,7 @@ export default class Editor extends Component {
               {/* Variables Functions Objects */}
               {!folded && (
                 <Factory
+                  d={this.state.editor}
                   data={editor.factory}
                   canvasStyle={editorCanvasStyle.factory}
                   section={this.section}

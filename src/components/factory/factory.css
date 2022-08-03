@@ -98,18 +98,8 @@ $rename: '../../../img/icons/rename.svg';
       background-color: color-mod($function a($fade-op));
     }
 
-    &.object {
-      background-color: color-mod($object a($fade-op));
-      /* border-radius: 0 $radius $radius 0; */
-
-      /* ! Lock object tab */
-      cursor: not-allowed;
-      &::after {
-        content: ' WIP';
-        font-weight: $light;
-        font-style: italic;
-        font-size: 0.7rem;
-      }
+    &.code {
+      background-color: color-mod($code a($fade-op));
     }
   }
 
@@ -124,8 +114,8 @@ $rename: '../../../img/icons/rename.svg';
       background-color: $function;
     }
 
-    &.object {
-      background-color: $object;
+    &.code {
+      background-color: $code;
     }
   }
 }
@@ -149,8 +139,8 @@ $rename: '../../../img/icons/rename.svg';
     @include section-color($function);
   }
 
-  &.objectContent {
-    @include section-color($object);
+  &.codeContent {
+    @include section-color($code);
   }
 
   &::-webkit-scrollbar {
@@ -299,8 +289,8 @@ $rename: '../../../img/icons/rename.svg';
   background-color: $function;
 }
 
-.object {
-  background-color: $object;
+.code {
+  background-color: $code;
 }
 
 .separator {

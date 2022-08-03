@@ -3,7 +3,7 @@ import { CopyBlock, atomOneLight } from 'react-code-blocks'
 import _b5BlocksObject from '../../../../b5.js/src/blocks/blocksObjectWrapper.js'
 
 const zip = (a, b) =>
-  Array.from(Array(Math.max(b.length, a.length)), (_, i) => [a[i], b[i]])
+  Array.from(Array(Math.max(b?.length, a?.length)), (_, i) => [a[i], b[i]])
 
 const io_obj_to_neighbour_arr = obj => {
   const { input = {}, output = {} } = obj
@@ -77,36 +77,29 @@ const get_block = (arr, row, col) => {
   return arr[row][col]
 }
 
-const eval_blocks = (order, nodes, blocks) => {
+const eval_blocks = (order, nodes, blockData) => {
   let result = {
-    variables: [],
-    functions: [],
-    blocks: [],
+    variable: [],
+    function: [],
+    component: [],
   }
-  console.log(order, nodes)
   const get_data = block => {
     const { input } = block
     if (input) {
       for (let [row, col] of Object.values(input).slice(1)) {
         const b = get_block(nodes, row, col)
         if (b.type === 'func') {
-          return b.name
+          return [blockData[b.name]?.eval_block?.variable_name?.(b.inlineData)]
         }
         return get_data(b)
       }
     }
     return block.inlineData
   }
-  const get_type = type => {
-    return {
-      constant: 'functions',
-      function: 'blocks',
-    }[type]
-  }
   for (let block of order) {
-    const { type = '', func = '' } = blocks[block.name]?.eval_block
+    const { type = '', func = '' } = blockData[block.name]?.eval_block
     const data = get_data(block)
-    result[get_type(type)].push(func(data))
+    result[type].push(func(data))
   }
   return result
 }
@@ -125,11 +118,10 @@ const all_populated = components => {
     }
     if (!ok) return false
   }
-
   return true
 }
 
-const loop = grid => {
+const parse_nodes = grid => {
   const blocks = grid?.playground?.blocks
   if (!blocks) return
 
@@ -143,7 +135,6 @@ const loop = grid => {
     }
   }
   const ccs = connected_components(nodes, blocks)
-  console.log(ccs)
   const blockData = {
     ..._b5BlocksObject.original,
     ..._b5BlocksObject.custom,
@@ -156,19 +147,29 @@ const loop = grid => {
   return res
 }
 
-const to_str = (arr, sep = '\n') => {
-  let str = arr.join(sep)
+const to_str = (arr, indentLevel, sep = '\n') => {
+  let str = [...arr.map(s => indent(indentLevel) + s)].join(sep)
   if (str) str += ';\n'
   return str
 }
 
+const merge = (arr, key) => {
+  let res = new Set(arr.map(sarr => sarr[key]).flat())
+  return [...res] ?? []
+}
+
+const indent = indent => {
+  return '\t'.repeat(indent)
+}
+
 const create_view = view => {
   if (!view) return ''
-  let res = 'using namespace dfl; \nint main() {\n'
-  for (const { blocks, functions, variables } of view) {
-    res += to_str(variables, ';\n')
-    res += to_str(functions, ';\n')
-    res += to_str(blocks, '\n>>= ')
+  let indentLevel = 1
+  let res = '#include "dfl/dfl.hpp"\n\nusing namespace dfl; \nint main() {\n'
+  res += to_str(merge(view, 'function'), indentLevel, ';\n')
+  res += to_str(merge(view, 'variable'), indentLevel, ';\n')
+  for (const { component } of view) {
+    res += to_str(component, indentLevel, '\n' + indent(indentLevel) + '>>=')
     res += '\n'
   }
   res = res.slice(0, -1)
@@ -180,7 +181,7 @@ const JTD = ({ data }) => {
   const [playground_view, set_playground_view] = useState('')
 
   useEffect(() => {
-    set_playground_view(create_view(loop(data)))
+    set_playground_view(create_view(parse_nodes(data)))
   }, [data])
 
   return (
@@ -188,7 +189,7 @@ const JTD = ({ data }) => {
       showLineNumbers={false}
       text={playground_view}
       language={'cpp'}
-      theme={atomOneLight}
+      theme={{ ...atomOneLight, backgroundColor: 'inherit' }}
       codeBlock
     />
   )
