@@ -3,6 +3,7 @@ export const colorPalette = {
   gen: '#419d78',
   mod: '#e0a458',
   pipe: '#4d9de0',
+  redirect: '#2596be',
   func: '#5c5d8d',
   sink: '#d36060',
   variable: '#f7b500',

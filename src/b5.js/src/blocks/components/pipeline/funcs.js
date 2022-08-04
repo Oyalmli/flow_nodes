@@ -61,7 +61,7 @@ _FlowBlocks.prototype.even = {
     name: 'even',
     variable_name: args => `even`,
     func: args => {
-      return `auto even = [](auto a){ return (a%2) == 0; }`
+      return `[](auto a){ return (a%2) == 0; }`
     },
   },
   run: function (p, o, draw, a, b) {

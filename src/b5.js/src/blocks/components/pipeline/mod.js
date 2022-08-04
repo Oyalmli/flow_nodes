@@ -1,6 +1,6 @@
 import _FlowBlocks from '../../main'
 import { valid } from '../../method'
-
+/*
 _FlowBlocks.prototype.take = {
   text: 'Take',
   type: 'mod',
@@ -43,3 +43,5 @@ _FlowBlocks.prototype.take = {
     },
   ],
 }
+
+*/

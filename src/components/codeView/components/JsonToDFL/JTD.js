@@ -7,9 +7,9 @@ const zip = (a, b) =>
 
 const io_obj_to_neighbour_arr = obj => {
   const { input = {}, output = {} } = obj
-  let arr = Object.values(input)
-  arr = arr.concat(Object.values(output).flat())
-  return arr.filter(e => e)
+  return [...Object.values(input), ...Object.values(output).flat()].filter(
+    Boolean
+  )
 }
 
 class DefaultDict {
@@ -23,13 +23,13 @@ class DefaultDict {
   }
 }
 
-const dfs = (temp, node, visited, blocks) => {
+const dfs = (temp, node, visited, nodes) => {
   visited[node.uuid] = true
   temp.push(node)
   const io_arr = io_obj_to_neighbour_arr(node)
-  for (let [y, x] of io_arr) {
-    if (visited[blocks[y][x].uuid] === false) {
-      temp = dfs(temp, blocks[y][x], visited, blocks)
+  for (let [row, col] of io_arr) {
+    if (visited[nodes[row][col].uuid] === false) {
+      temp = dfs(temp, nodes[row][col], visited, nodes)
     }
   }
   return temp
@@ -42,11 +42,11 @@ const iter_nodes = obj => {
   return res
 }
 
-const connected_components = (nodes, blocks) => {
+const connected_components = nodes => {
   let visited = new DefaultDict(false)
   let ccs = []
 
-  for (const node of iter_nodes(blocks)) {
+  for (const node of iter_nodes(nodes)) {
     if (visited[node.uuid] === false) {
       let temp = []
       ccs.push(dfs(temp, node, visited, nodes))
@@ -55,53 +55,67 @@ const connected_components = (nodes, blocks) => {
   return ccs
 }
 
-const traverse = (args, root, nodes, blocks) => {
-  let visited = new DefaultDict(false)
-  let body = {}
-  let stack = [root]
-  while (stack.length > 0) {
-    const c_node = stack.pop()
-    if (!c_node) return
-    const io_arr = io_obj_to_neighbour_arr(c_node)
-    let args = []
-    for (let [y, x] of io_arr) {
-      if (visited[blocks[y][x].uuid] === false) {
-        args = traverse(args, blocks[y][x], visited, blocks)
-      }
-    }
-  }
-  return body
+const out = (grid, pblock) => {
+  const outArr = Object.values(pblock.output)
+    .map(([row, col]) => [row, col])
+    .flat()
+    .filter(Boolean)
+  return outArr.map(([row, col]) => grid[row][col])
 }
 
-const get_block = (arr, row, col) => {
-  return arr[row][col]
+const inp = (grid, pblock) => {
+  const inpArr = Object.values(pblock.input)
+    .map(([row, col]) => [row, col])
+    .filter(Boolean)
+  return inpArr.map(([row, col]) => grid[row][col])
 }
 
-const eval_blocks = (order, nodes, blockData) => {
-  let result = {
-    variable: [],
-    function: [],
-    component: [],
+const get_args = (grid, pblock) => {
+  const args = inp(grid, pblock).slice(1)
+  return [...args]
+}
+
+const place = (grid, pblock) => {
+  const { name, type, eval_block, args = [] } = pblock
+  const { func } = eval_block
+  let blk = { name, func, data: args }
+  switch (type) {
+    case 'gen':
+      return [blk, ...place(grid, out(grid, pblock)[0])]
+    case 'pipe':
+      return [
+        {
+          ...blk,
+          data: [
+            ...args,
+            ...get_args(grid, pblock)
+              .map(e => place(grid, e))
+              .flat(),
+          ],
+        },
+        ...place(grid, out(grid, pblock)[0]),
+      ]
+    case 'redirect':
+      return [
+        {
+          ...blk,
+          data: [
+            ...args,
+            ...get_args(grid, pblock)
+              .map(e => place(grid, e))
+              .flat(),
+            ...out(grid, pblock).map(o => place(grid, o)),
+          ],
+        },
+      ]
+    case 'sink':
+      return [blk]
+    case 'func':
+      return [blk]
+    default:
+      console.error('NOT IMPLEMENTED')
+      return []
   }
-  const get_data = block => {
-    const { input } = block
-    if (input) {
-      for (let [row, col] of Object.values(input).slice(1)) {
-        const b = get_block(nodes, row, col)
-        if (b.type === 'func') {
-          return [blockData[b.name]?.eval_block?.variable_name?.(b.inlineData)]
-        }
-        return get_data(b)
-      }
-    }
-    return block.inlineData
-  }
-  for (let block of order) {
-    const { type = '', func = '' } = blockData[block.name]?.eval_block
-    const data = get_data(block)
-    result[type].push(func(data))
-  }
-  return result
 }
 
 const all_populated = components => {
@@ -125,24 +139,36 @@ const parse_nodes = grid => {
   const blocks = grid?.playground?.blocks
   if (!blocks) return
 
-  let nodes = {}
-  for (let [i, row] of Object.entries(blocks)) {
-    for (let [j, cell] of Object.entries(row)) {
-      if (cell) {
-        if (!nodes[i]) nodes[i] = {}
-        nodes[i][j] = { ...cell, row: i, col: j }
-      }
-    }
-  }
-  const ccs = connected_components(nodes, blocks)
   const blockData = {
     ..._b5BlocksObject.original,
     ..._b5BlocksObject.custom,
     ..._b5BlocksObject.library,
   } // Merge all available blocks
+  //TODO: populate data in nodes using this
+
+  let nodes = {}
+  for (let [i, row] of Object.entries(blocks)) {
+    for (let [j, cell] of Object.entries(row)) {
+      if (cell) {
+        if (!nodes[i]) nodes[i] = {}
+        nodes[i][j] = {
+          uuid: cell.uuid,
+          type: cell.type,
+          name: cell.name,
+          args: cell.inlineData,
+          eval_block: blockData[cell.name]?.eval_block,
+          input: cell.input,
+          output: cell.output,
+        }
+      }
+    }
+  }
+  const ccs = connected_components(nodes)
+  //TODO: Fix CC
+
   let res = []
   for (let cc of ccs) {
-    all_populated(cc) && res.push(eval_blocks(cc, nodes, blockData))
+    all_populated(cc) && res.push(place(nodes, cc[0])) //Need way of finding "top" of CC, not just choosing 0
   }
   return res
 }
@@ -162,16 +188,17 @@ const indent = indent => {
   return '\t'.repeat(indent)
 }
 
-const create_view = view => {
-  if (!view) return ''
+const create_view = parsed_ccs => {
+  console.log(parsed_ccs)
+  if (!parsed_ccs) return ''
   let indentLevel = 1
   let res = '#include "dfl/dfl.hpp"\n\nusing namespace dfl; \nint main() {\n'
-  res += to_str(merge(view, 'function'), indentLevel, ';\n')
-  res += to_str(merge(view, 'variable'), indentLevel, ';\n')
-  for (const { component } of view) {
-    res += to_str(component, indentLevel, '\n' + indent(indentLevel) + '>>=')
-    res += '\n'
-  }
+  //res += to_str(merge(view, 'function'), indentLevel, ';\n')
+  //res += to_str(merge(view, 'variable'), indentLevel, ';\n')
+  //for (const { component } of view) {
+  //res += to_str(component, indentLevel, '\n' + indent(indentLevel) + '>>=')
+  //res += '\n'
+  //}
   res = res.slice(0, -1)
   res += '}'
   return res
@@ -181,6 +208,7 @@ const JTD = ({ data }) => {
   const [playground_view, set_playground_view] = useState('')
 
   useEffect(() => {
+    console.log('SEP')
     set_playground_view(create_view(parse_nodes(data)))
   }, [data])
 

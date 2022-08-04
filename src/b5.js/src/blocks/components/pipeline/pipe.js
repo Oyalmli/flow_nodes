@@ -44,7 +44,7 @@ _FlowBlocks.prototype.transform = {
 
 _FlowBlocks.prototype.partition = {
   text: 'Partition',
-  type: 'pipe',
+  type: 'redirect',
   kind: 'normal',
   source: 'original',
   description: 'Partitions based on test',
@@ -83,11 +83,52 @@ _FlowBlocks.prototype.partition = {
   eval_block: {
     pipeline_type: 'pipe',
     type: 'component',
-    func: ([func, l = 'l', r = 'r']) => {
-      return `partition(${func}
-        , ${l}
-        , ${r}
-        )`
+    func: ([func, a, b]) => {
+      //console.log("PARTITION ARGS", args);
+      return `partition(${func},\n\t${a}, \n\t${b})`
     },
   },
+}
+
+_FlowBlocks.prototype.take = {
+  text: 'Take',
+  type: 'pipe',
+  kind: 'iinput',
+  source: 'original',
+  description: 'Take a given number of values from the generator',
+  inputNodes: [
+    {
+      text: 'In',
+      name: 'in',
+      description: 'The incoming value',
+      type: ['number'],
+    },
+  ],
+  outputNodes: [
+    {
+      text: 'Out',
+      name: 'out',
+      description: 'The outgoing value',
+      type: ['object', 'number'],
+    },
+  ],
+  default: [50], // default here is for default inline data instead of input
+  eval_block: {
+    pipeline_type: 'mod',
+    type: 'function',
+    func: data => {
+      return `pipe::take(${data})`
+    },
+  },
+  run: function (p, o, draw, input, a) {
+    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
+  },
+  // 'slider' kind block special
+  inlineData: [
+    {
+      name: 'Take',
+      description: 'Number of values to take',
+      type: ['object', 'number'],
+    },
+  ],
 }
