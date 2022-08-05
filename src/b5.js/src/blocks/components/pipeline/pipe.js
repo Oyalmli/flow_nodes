@@ -84,8 +84,7 @@ _FlowBlocks.prototype.partition = {
     pipeline_type: 'pipe',
     type: 'component',
     func: ([func, a, b]) => {
-      //console.log("PARTITION ARGS", args);
-      return `partition(${func},\n\t${a}, \n\t${b})`
+      return `pipe::partition(${func},\n\t${a}, \n\t${b})`
     },
   },
 }

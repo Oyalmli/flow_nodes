@@ -75,6 +75,7 @@ const get_args = (grid, pblock) => {
   return [...args]
 }
 
+/*
 const place = (grid, pblock) => {
   const { name, type, eval_block, args = [] } = pblock
   const { func } = eval_block
@@ -112,6 +113,50 @@ const place = (grid, pblock) => {
       return [blk]
     case 'func':
       return [blk]
+    default:
+      console.error('NOT IMPLEMENTED')
+      return []
+  }
+}
+*/
+const indent = indent => {
+  return '\t'.repeat(indent)
+}
+
+const place = (ind, grid, pblock) => {
+  const { name, type, eval_block, args = [] } = pblock
+  const { func } = eval_block
+  let blk = { name, func, data: args }
+  const sep = indent(ind)
+  switch (type) {
+    case 'gen':
+      return [sep + func(args), place(ind, grid, out(grid, pblock)[0])].join(
+        `\n${sep}>>= `
+      )
+    case 'pipe':
+      return [
+        func([
+          ...args,
+          ...get_args(grid, pblock)
+            .map(e => place(ind, grid, e))
+            .flat(),
+        ]),
+        place(ind, grid, out(grid, pblock)[0]),
+      ].join(`\n${sep}>>= `)
+    case 'redirect':
+      return [
+        func([
+          ...args,
+          ...get_args(grid, pblock)
+            .map(e => place(ind, grid, e))
+            .flat(),
+          ...out(grid, pblock).map(o => sep + place(ind + 1, grid, o)),
+        ]),
+      ]
+    case 'sink':
+      return [func(args)]
+    case 'func':
+      return [func(args)]
     default:
       console.error('NOT IMPLEMENTED')
       return []
@@ -168,7 +213,7 @@ const parse_nodes = grid => {
 
   let res = []
   for (let cc of ccs) {
-    all_populated(cc) && res.push(place(nodes, cc[0])) //Need way of finding "top" of CC, not just choosing 0
+    all_populated(cc) && res.push(place(1, nodes, cc[0])) //Need way of finding "top" of CC, not just choosing 0
   }
   return res
 }
@@ -184,21 +229,14 @@ const merge = (arr, key) => {
   return [...res] ?? []
 }
 
-const indent = indent => {
-  return '\t'.repeat(indent)
-}
-
 const create_view = parsed_ccs => {
   console.log(parsed_ccs)
   if (!parsed_ccs) return ''
   let indentLevel = 1
   let res = '#include "dfl/dfl.hpp"\n\nusing namespace dfl; \nint main() {\n'
-  //res += to_str(merge(view, 'function'), indentLevel, ';\n')
-  //res += to_str(merge(view, 'variable'), indentLevel, ';\n')
-  //for (const { component } of view) {
-  //res += to_str(component, indentLevel, '\n' + indent(indentLevel) + '>>=')
-  //res += '\n'
-  //}
+  for (const line of parsed_ccs) {
+    res += line + ';\n\n'
+  }
   res = res.slice(0, -1)
   res += '}'
   return res
@@ -208,7 +246,6 @@ const JTD = ({ data }) => {
   const [playground_view, set_playground_view] = useState('')
 
   useEffect(() => {
-    console.log('SEP')
     set_playground_view(create_view(parse_nodes(data)))
   }, [data])
 

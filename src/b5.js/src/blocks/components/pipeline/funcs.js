@@ -23,7 +23,7 @@ _FlowBlocks.prototype.addValue = {
     name: 'addValue',
     variable_name: args => `addValue${args}`,
     func: args => {
-      return `auto addValue${args} = [](auto a){ return a + ${args}; }`
+      return `/*addValue*/[](auto a){ return a + ${args}; }`
     },
   },
   run: function (p, o, draw, a) {
@@ -61,7 +61,7 @@ _FlowBlocks.prototype.even = {
     name: 'even',
     variable_name: args => `even`,
     func: args => {
-      return `[](auto a){ return (a%2) == 0; }`
+      return `/*Even*/[](auto a){ return (a%2) == 0; }`
     },
   },
   run: function (p, o, draw, a, b) {
