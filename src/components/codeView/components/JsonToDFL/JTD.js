@@ -56,15 +56,15 @@ const connected_components = nodes => {
 }
 
 const out = (grid, pblock) => {
-  const outArr = Object.values(pblock.output)
-    .map(([row, col]) => [row, col])
+  const outArr = Object.values(pblock.output ?? {})
     .flat()
-    .filter(Boolean)
-  return outArr.map(([row, col]) => grid[row][col])
+    .sort()
+    .map(([row, col]) => grid[row][col])
+  return outArr
 }
 
 const inp = (grid, pblock) => {
-  const inpArr = Object.values(pblock.input)
+  const inpArr = Object.values(pblock.input ?? {})
     .map(([row, col]) => [row, col])
     .filter(Boolean)
   return inpArr.map(([row, col]) => grid[row][col])
@@ -124,42 +124,83 @@ const indent = indent => {
 }
 
 const place = (ind, grid, pblock) => {
-  const { name, type, eval_block, args = [] } = pblock
-  const { func } = eval_block
-  let blk = { name, func, data: args }
+  if (!pblock) return {}
+  console.log(pblock)
+  const { p_type, eval_block, args = [] } = pblock
+  const { func, variable_name } = eval_block
   const sep = indent(ind)
-  switch (type) {
-    case 'gen':
-      return [sep + func(args), place(ind, grid, out(grid, pblock)[0])].join(
-        `\n${sep}>>= `
-      )
-    case 'pipe':
-      return [
+  switch (p_type) {
+    case 'gen': {
+      const { v, f, t } = place(ind, grid, out(grid, pblock)[0])
+      return { v, f, t: [sep + func(args), t].join(`\n${sep}>>= `) }
+    }
+    case 'pipe': {
+      let { v = [], f = [], t } = place(ind, grid, out(grid, pblock)[0])
+      let tree = [
         func([
           ...args,
           ...get_args(grid, pblock)
-            .map(e => place(ind, grid, e))
+            .map(e => {
+              const { v: vd, f: fd, t: td } = place(ind, grid, e)
+              v = [...v, vd].flat()
+              f = [...f, fd].flat()
+              //t = [...t, td]
+              return td
+            })
             .flat(),
         ]),
-        place(ind, grid, out(grid, pblock)[0]),
+        ...t,
       ].join(`\n${sep}>>= `)
-    case 'redirect':
-      return [
+      return { v, f, t: tree }
+    }
+    case 'redirect': {
+      let { v = [], f = [], t = [] } = place(ind, grid, out(grid, pblock)[0])
+      let tree = [
         func([
           ...args,
           ...get_args(grid, pblock)
-            .map(e => place(ind, grid, e))
+            .map(e => {
+              const { v: vd, f: fd, t: td } = place(ind, grid, e)
+              v = [...v, vd].flat()
+              f = [...f, fd].flat()
+              t = [...t, td].flat()
+              return td
+            })
             .flat(),
-          ...out(grid, pblock).map(o => sep + place(ind + 1, grid, o)),
+          ...out(grid, pblock).map(e => {
+            const { v: vd, f: fd, t: td } = place(ind + 1, grid, e)
+            v = [...v, vd].flat()
+            f = [...f, fd].flat()
+            t = [...t, td].flat()
+            return sep + td
+          }),
         ]),
       ]
+      return { v, f, t: tree }
+    }
+    case 'fork':
+      return [
+        func(
+          out(grid, pblock)
+            .map(o => place(ind + 1, grid, o))
+            .map(p => `\n${indent(ind + 1)}` + p)
+        ),
+      ]
     case 'sink':
-      return [func(args)]
-    case 'func':
-      return [func(args)]
-    default:
+      return { t: [func(args)] }
+    case 'func': {
+      const _inp = inp(grid, pblock)
+      const { v = [], f = [], t = [] } = _inp && place(ind, grid, _inp[0])
+      return {
+        v,
+        f: [func([...args, ...t]), ...f],
+        t: [variable_name([...args, ...t])],
+      }
+    }
+    default: {
       console.error('NOT IMPLEMENTED')
       return []
+    }
   }
 }
 
@@ -199,6 +240,7 @@ const parse_nodes = grid => {
         nodes[i][j] = {
           uuid: cell.uuid,
           type: cell.type,
+          p_type: blockData[cell.name]?.p_type ?? cell.type,
           name: cell.name,
           args: cell.inlineData,
           eval_block: blockData[cell.name]?.eval_block,
@@ -211,9 +253,23 @@ const parse_nodes = grid => {
   const ccs = connected_components(nodes)
   //TODO: Fix CC
 
-  let res = []
+  let res = {
+    variables: new Set(),
+    functions: new Set(),
+    blocks: [],
+  }
   for (let cc of ccs) {
-    all_populated(cc) && res.push(place(1, nodes, cc[0])) //Need way of finding "top" of CC, not just choosing 0
+    if (!all_populated(cc)) continue
+    const { v = [], f = [], t = [] } = place(1, nodes, cc[0])
+    console.log('AFTER', { v, f, t })
+    v && v.forEach(e => res.variables.add(e)) //add variables
+    f && f.forEach(e => res.functions.add(e)) //add functions
+    t && res.blocks.push(t)
+  }
+  res = {
+    variables: [...res.variables].filter(Boolean),
+    functions: [...res.functions].filter(Boolean),
+    blocks: [...res.blocks].filter(Boolean),
   }
   return res
 }
@@ -230,11 +286,18 @@ const merge = (arr, key) => {
 }
 
 const create_view = parsed_ccs => {
-  console.log(parsed_ccs)
   if (!parsed_ccs) return ''
-  let indentLevel = 1
+  console.log(parsed_ccs)
   let res = '#include "dfl/dfl.hpp"\n\nusing namespace dfl; \nint main() {\n'
-  for (const line of parsed_ccs) {
+  res +=
+    parsed_ccs.variables.length > 0
+      ? parsed_ccs.variables.map(e => `\t${e};\n`).join('') + '\n'
+      : ''
+  res +=
+    parsed_ccs.functions.length > 0
+      ? parsed_ccs.functions.map(e => `\t${e};\n`).join('') + '\n'
+      : ''
+  for (const line of parsed_ccs.blocks) {
     res += line + ';\n\n'
   }
   res = res.slice(0, -1)

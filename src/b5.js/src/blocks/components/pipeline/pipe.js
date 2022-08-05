@@ -34,6 +34,7 @@ _FlowBlocks.prototype.transform = {
     pipeline_type: 'pipe',
     type: 'component',
     func: args => {
+      console.log('transform', args)
       return `pipe::transform(${args})`
     },
   },
@@ -85,6 +86,42 @@ _FlowBlocks.prototype.partition = {
     type: 'component',
     func: ([func, a, b]) => {
       return `pipe::partition(${func},\n\t${a}, \n\t${b})`
+    },
+  },
+}
+
+_FlowBlocks.prototype.fork = {
+  text: 'Fork',
+  type: 'redirect',
+  p_type: 'fork',
+  kind: 'normal',
+  source: 'original',
+  description: 'Sends the values to all outputs in order',
+  inputNodes: [
+    {
+      text: 'In',
+      name: 'in',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+  ],
+  outputNodes: [
+    {
+      text: 'Out',
+      name: 'out',
+      description: 'the outgoing value',
+      type: ['object', 'number'],
+    },
+  ],
+  default: [0, null],
+  run: function (p, o, draw, a) {
+    o[0] = valid(a, this.default[0])
+  },
+  eval_block: {
+    pipeline_type: 'pipe',
+    type: 'component',
+    func: outs => {
+      return `pipe::fork(${outs})`
     },
   },
 }

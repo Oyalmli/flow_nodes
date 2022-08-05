@@ -23,7 +23,7 @@ _FlowBlocks.prototype.addValue = {
     name: 'addValue',
     variable_name: args => `addValue${args}`,
     func: args => {
-      return `/*addValue*/[](auto a){ return a + ${args}; }`
+      return `auto addValue${args} = [](auto a){ return a + ${args}; }`
     },
   },
   run: function (p, o, draw, a) {
@@ -50,7 +50,7 @@ _FlowBlocks.prototype.even = {
     {
       text: 'Even?',
       name: 'even',
-      description: 'The logical AND boolean value.',
+      description: 'Is the value even',
       type: ['object', 'boolean'],
     },
   ],
@@ -61,7 +61,46 @@ _FlowBlocks.prototype.even = {
     name: 'even',
     variable_name: args => `even`,
     func: args => {
-      return `/*Even*/[](auto a){ return (a%2) == 0; }`
+      return `auto even = [](auto a){ return (a%2) == 0; }`
+    },
+  },
+  run: function (p, o, draw, a, b) {
+    o[0] = a && b
+  },
+}
+
+_FlowBlocks.prototype.negate = {
+  text: 'Negate',
+  type: 'func',
+  kind: 'inline',
+  source: 'original',
+  description: 'Negate the previous function',
+  inputNodes: [
+    {
+      text: 'Func',
+      name: 'func',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+  ],
+  outputNodes: [
+    {
+      text: 'Not',
+      name: 'not',
+      description: 'Negate',
+      type: ['object', 'boolean'],
+    },
+  ],
+  default: [undefined],
+  eval_block: {
+    pipeline_type: 'funcs',
+    type: 'function',
+    name: 'not',
+    variable_name: args => {
+      return `negate(${args})`
+    },
+    func: args => {
+      return `auto negate = [](auto g) {\n\t\treturn [=](auto x) { return !g(x); }; \n\t}`
     },
   },
   run: function (p, o, draw, a, b) {
