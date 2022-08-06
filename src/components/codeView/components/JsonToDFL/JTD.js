@@ -134,11 +134,11 @@ const place = (ind, grid, pblock) => {
   const sep = indent(ind)
   switch (p_type) {
     case 'gen': {
-      const { v, f, t } = place(ind, grid, out(grid, pblock)[0])
-      return { v, f, t: [sep + func(args), t].join(`\n${sep}>>= `) }
+      const { f, t } = place(ind, grid, out(grid, pblock)[0])
+      return { f, t: [sep + func(args), t].join(`\n${sep}>>= `) }
     }
     case 'pipe': {
-      let { v = [], f = [], t } = place(ind, grid, out(grid, pblock)[0])
+      let { f = [], t } = place(ind, grid, out(grid, pblock)[0])
       let tree = [
         func([
           ...args,
@@ -146,14 +146,18 @@ const place = (ind, grid, pblock) => {
             .map(e => {
               const { f: fd, t: td } = place(ind, grid, e)
               f = [...f, fd].flat()
-              //t = [...t, td]
               return td
             })
             .flat(),
         ]),
-        ...t,
+        t,
       ].join(`\n${sep}>>= `)
-      return { v, f, t: tree }
+      return { f, t: tree }
+    }
+    case 'tee': {
+      const [a, b] = out(grid, pblock).map(e => place(ind, grid, e))
+      let tree = [func([...args, a.t]), b.t].join(`\n${sep}>>= `)
+      return { f: [a.f, b.f], t: tree }
     }
     case 'redirect': {
       let { f = [], t = [] } = place(ind, grid, out(grid, pblock)[0])
@@ -178,7 +182,6 @@ const place = (ind, grid, pblock) => {
       ]
       return { f, t: tree }
     }
-    //Fork skal være lik redirect
     case 'fork': {
       let { f = [], t = [] } = place(ind, grid, out(grid, pblock)[0])
       let tree = [
@@ -322,7 +325,8 @@ const merge = (arr, key) => {
 
 const create_view = parsed_ccs => {
   if (!parsed_ccs) return ''
-  let res = '#include "dfl/dfl.hpp"\n\nusing namespace dfl; \nint main() {\n'
+  let res =
+    '#include <iostream>\n#include "dfl/dfl.hpp"\n\nusing namespace dfl; \nint main() {\n'
 
   res +=
     parsed_ccs.variables.length > 0

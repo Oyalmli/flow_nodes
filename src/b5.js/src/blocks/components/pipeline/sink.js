@@ -12,7 +12,7 @@ _FlowBlocks.prototype.printf = {
       text: 'In',
       name: 'in',
       description: 'The incoming value',
-      type: ['number'],
+      type: ['object', 'number'],
     },
   ],
   outputNodes: null,
@@ -36,7 +36,6 @@ _FlowBlocks.prototype.printf = {
     },
   ],
 }
-
 _FlowBlocks.prototype.sum = {
   text: 'Sum',
   type: 'sink',
@@ -69,4 +68,34 @@ _FlowBlocks.prototype.sum = {
   run: function (p, o, draw, input, a) {
     o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
   },
+}
+_FlowBlocks.prototype.hole = {
+  text: 'Hole',
+  type: 'sink',
+  kind: 'inline',
+  source: 'original',
+  description: 'Discards the incoming value',
+  inputNodes: [
+    {
+      text: 'In',
+      name: 'in',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+  ],
+  outputNodes: null,
+  default: [], // default here is for default inline data instead of input
+  eval_block: {
+    func: data => {
+      return `sink::hole()`
+    },
+  },
+  // 'slider' kind block special
+  inlineData: [
+    {
+      name: 'Take',
+      description: 'Number of values to take',
+      type: ['object', 'string'],
+    },
+  ],
 }
