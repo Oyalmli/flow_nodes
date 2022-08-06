@@ -277,14 +277,12 @@ export default class CodeBlocks extends Component {
               (ioEnd === 'output' && endBlockInd[0] >= startBlockInd[0])
             )
               return
-
             const [[row, col], idx] =
               startNodeType === 'output'
                 ? [startBlockInd, sN.startNodeInd]
                 : [endBlockInd, j]
 
             const { name, output } = this.props.data[row][col]
-            console.log(name)
             if (name !== 'fork') {
               if (output && output[idx].length > 0) {
                 return

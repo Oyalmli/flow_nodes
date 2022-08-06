@@ -125,9 +125,12 @@ const indent = indent => {
 
 const place = (ind, grid, pblock) => {
   if (!pblock) return {}
-  console.log(pblock)
-  const { p_type, eval_block, args = [] } = pblock
-  const { func, variable_name } = eval_block
+  const {
+    p_type,
+    eval_block = { func: undefined, variable_name: undefined },
+    args = [],
+  } = pblock
+  const { func = undefined, variable_name = undefined } = eval_block
   const sep = indent(ind)
   switch (p_type) {
     case 'gen': {
@@ -141,8 +144,7 @@ const place = (ind, grid, pblock) => {
           ...args,
           ...get_args(grid, pblock)
             .map(e => {
-              const { v: vd, f: fd, t: td } = place(ind, grid, e)
-              v = [...v, vd].flat()
+              const { f: fd, t: td } = place(ind, grid, e)
               f = [...f, fd].flat()
               //t = [...t, td]
               return td
@@ -154,51 +156,73 @@ const place = (ind, grid, pblock) => {
       return { v, f, t: tree }
     }
     case 'redirect': {
-      let { v = [], f = [], t = [] } = place(ind, grid, out(grid, pblock)[0])
+      let { f = [], t = [] } = place(ind, grid, out(grid, pblock)[0])
       let tree = [
         func([
           ...args,
           ...get_args(grid, pblock)
             .map(e => {
-              const { v: vd, f: fd, t: td } = place(ind, grid, e)
-              v = [...v, vd].flat()
+              const { f: fd, t: td } = place(ind, grid, e)
               f = [...f, fd].flat()
               t = [...t, td].flat()
               return td
             })
             .flat(),
           ...out(grid, pblock).map(e => {
-            const { v: vd, f: fd, t: td } = place(ind + 1, grid, e)
-            v = [...v, vd].flat()
+            const { f: fd, t: td } = place(ind + 1, grid, e)
             f = [...f, fd].flat()
             t = [...t, td].flat()
             return sep + td
           }),
         ]),
       ]
-      return { v, f, t: tree }
+      return { f, t: tree }
     }
-    case 'fork':
-      return [
+    //Fork skal være lik redirect
+    case 'fork': {
+      let { f = [], t = [] } = place(ind, grid, out(grid, pblock)[0])
+      let tree = [
         func(
           out(grid, pblock)
-            .map(o => place(ind + 1, grid, o))
+            .map(o => {
+              const { f: fd, t: td } = place(ind + 1, grid, o)
+              f = [...f, fd].flat()
+              t = [...t, td].flat()
+              return td
+            })
             .map(p => `\n${indent(ind + 1)}` + p)
         ),
       ]
+      return { f, t: tree }
+    }
     case 'sink':
-      return { t: [func(args)] }
+      let t = []
+      return {
+        t: [
+          func([
+            ...args,
+            ...get_args(grid, pblock)
+              .map(e => {
+                const { t: td } = place(ind, grid, e)
+                t = [...t, td].flat()
+                return td
+              })
+              .flat(),
+          ]),
+        ],
+      }
     case 'func': {
       const _inp = inp(grid, pblock)
-      const { v = [], f = [], t = [] } = _inp && place(ind, grid, _inp[0])
+      const { f = [], t = [] } = _inp && place(ind, grid, _inp[0])
       return {
-        v,
         f: [func([...args, ...t]), ...f],
         t: [variable_name([...args, ...t])],
       }
     }
+    case 'variable':
+      return { t: [pblock.name] }
     default: {
-      console.error('NOT IMPLEMENTED')
+      console.error('NOT IMPLEMENTED', pblock)
       return []
     }
   }
@@ -221,8 +245,21 @@ const all_populated = components => {
   return true
 }
 
+const format_variables = variables => {
+  let res = []
+  for (const { name, blocks } of Object.values(variables)) {
+    const block =
+      Object.values(blocks)
+        .map(e => Object.values(e))
+        .flat()?.[0] ?? 0
+    res.push({ name, data: block?.inlineData })
+  }
+  return res
+}
+
 const parse_nodes = grid => {
   const blocks = grid?.playground?.blocks
+  const variables = grid?.factory?.variable
   if (!blocks) return
 
   const blockData = {
@@ -231,7 +268,6 @@ const parse_nodes = grid => {
     ..._b5BlocksObject.library,
   } // Merge all available blocks
   //TODO: populate data in nodes using this
-
   let nodes = {}
   for (let [i, row] of Object.entries(blocks)) {
     for (let [j, cell] of Object.entries(row)) {
@@ -261,13 +297,12 @@ const parse_nodes = grid => {
   for (let cc of ccs) {
     if (!all_populated(cc)) continue
     const { v = [], f = [], t = [] } = place(1, nodes, cc[0])
-    console.log('AFTER', { v, f, t })
     v && v.forEach(e => res.variables.add(e)) //add variables
     f && f.forEach(e => res.functions.add(e)) //add functions
     t && res.blocks.push(t)
   }
   res = {
-    variables: [...res.variables].filter(Boolean),
+    variables: [...format_variables(variables)].filter(Boolean),
     functions: [...res.functions].filter(Boolean),
     blocks: [...res.blocks].filter(Boolean),
   }
@@ -287,11 +322,13 @@ const merge = (arr, key) => {
 
 const create_view = parsed_ccs => {
   if (!parsed_ccs) return ''
-  console.log(parsed_ccs)
   let res = '#include "dfl/dfl.hpp"\n\nusing namespace dfl; \nint main() {\n'
+
   res +=
     parsed_ccs.variables.length > 0
-      ? parsed_ccs.variables.map(e => `\t${e};\n`).join('') + '\n'
+      ? parsed_ccs.variables
+          .map(({ name, data }) => `\tauto ${name} = ${data};\n`)
+          .join('') + '\n'
       : ''
   res +=
     parsed_ccs.functions.length > 0

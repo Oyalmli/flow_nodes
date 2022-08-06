@@ -176,8 +176,8 @@ class BlockRenderer extends Component {
 
     const { text, type, kind, inputNodes, sideNode, outputNodes, description } =
       block
-    let inputNodesCount = inputNodes === null ? 0 : inputNodes.length,
-      outputNodesCount = outputNodes === null ? 0 : outputNodes.length
+    let inputNodesCount = inputNodes?.length ?? 0,
+      outputNodesCount = outputNodes?.length ?? 0
 
     let myBlock = null
 
@@ -335,6 +335,40 @@ class BlockRenderer extends Component {
             />
           </>
         )
+        break
+      case 'variable':
+        {
+          const inlineCount = Math.max(inputNodesCount, outputNodesCount)
+          myBlock = (
+            <>
+              {!action && (
+                <div className={'sudoBlock inlineCount' + inlineCount}></div>
+              )}
+              <InputBlock
+                action={action}
+                className={
+                  'grab block ' + type + ' input inlineCount' + inlineCount
+                }
+                name={name}
+                text={text}
+                input={input}
+                inputNodes={inputNodes}
+                inlineData={inlineData}
+                sideNode={sideNode}
+                output={output}
+                outputNodes={outputNodes}
+                type={type}
+                collect={collect}
+                x={x}
+                y={y}
+                nodesRef={this.nodesRef}
+                focused={focused}
+                selectedNodes={selectedNodes}
+                description={description}
+              />
+            </>
+          )
+        }
         break
       case 'method':
         break

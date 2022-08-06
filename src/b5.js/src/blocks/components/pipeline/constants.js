@@ -1,6 +1,7 @@
 import _FlowBlocks from '../../main'
 import { numberValid, valid } from '../../method'
 
+/*
 _FlowBlocks.prototype.string = {
   text: 'String',
   type: 'object',
@@ -61,3 +62,4 @@ _FlowBlocks.prototype.number = {
     },
   ],
 }
+*/

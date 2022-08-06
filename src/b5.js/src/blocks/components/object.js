@@ -26,7 +26,6 @@ _b5Blocks.prototype.num = {
   ],
   default: [0],
   run: function (p, o, draw, a) {
-    console.log(p, o, draw, a)
     o[0] = numberValid(a) ? a : 0
   },
 }
