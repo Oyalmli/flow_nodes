@@ -24,4 +24,24 @@ import _FlowBlocks from './main'
 
 import './components/pipeline'
 
+_FlowBlocks.prototype.comment = {
+  text: 'note',
+  type: 'comment', // ? Should be default?
+  kind: 'comment',
+  source: 'original',
+  description: 'Take a note.',
+  inputNodes: null,
+  outputNodes: null,
+  inlineData: [
+    {
+      name: 'note',
+      description: 'Comment for the code.',
+      type: ['object', 'string'],
+    },
+  ],
+  default: [''],
+  ignore: true,
+  run: function (p, o, draw) {}, // This block is ignored by b5
+}
+
 export default _FlowBlocks

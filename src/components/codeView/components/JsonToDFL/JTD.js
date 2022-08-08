@@ -303,13 +303,12 @@ const parse_nodes = grid => {
     }
   }
   */
-
   for (let cc of ccs) {
     if (!all_populated(cc)) continue
     const { v = [], f = [], t = [] } = place(1, nodes, find_gen(cc))
     v && v.forEach(e => res.variables.add(e)) //add variables
     f && f.forEach(e => res.functions.add(e)) //add functions
-    t && res.blocks.push(t)
+    t && res.blocks.push(t.length > 0 ? t : undefined)
   }
   res = {
     variables: [...format_variables(variables)].filter(Boolean),
