@@ -19,6 +19,12 @@ _FlowBlocks.prototype.range = {
   default: [0, 1, 1],
   eval_block: {
     func: data => {
+      //Look into this // Numbers are converted from float to int
+      if (data.some(n => String(n).includes('.'))) {
+        return `gen::range(${data.map(n =>
+          String(n).includes('.') ? n : n.toFixed(1)
+        )})`
+      }
       return `gen::range(${data})`
     },
   },
@@ -43,7 +49,6 @@ _FlowBlocks.prototype.range = {
     },
   ],
 }
-
 _FlowBlocks.prototype.counter = {
   text: 'Counter',
   type: 'gen',
@@ -69,7 +74,6 @@ _FlowBlocks.prototype.counter = {
     o[0] = valid(a, this.default[0])
   },
 }
-
 _FlowBlocks.prototype.file = {
   text: 'File',
   type: 'gen',
@@ -107,7 +111,6 @@ _FlowBlocks.prototype.file = {
     },
   ],
 }
-
 _FlowBlocks.prototype.sine = {
   text: 'Sine',
   type: 'gen',
@@ -152,7 +155,6 @@ _FlowBlocks.prototype.sine = {
     },
   ],
 }
-
 _FlowBlocks.prototype.value = {
   text: 'Value',
   type: 'gen',

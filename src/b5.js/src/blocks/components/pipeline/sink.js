@@ -99,3 +99,138 @@ _FlowBlocks.prototype.hole = {
     },
   ],
 }
+_FlowBlocks.prototype.for_each = {
+  text: 'For Each',
+  type: 'sink',
+  kind: 'normal',
+  source: 'original',
+  description: 'Run function using value for each element',
+  inputNodes: [
+    {
+      text: 'In',
+      name: 'in',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+    {
+      text: 'Func',
+      name: 'func',
+      description: 'Function to run',
+      type: ['object', 'func'],
+    },
+  ],
+  outputNodes: null,
+  default: [0, null],
+  run: function (p, o, draw, a) {
+    o[0] = valid(a, this.default[0])
+  },
+  eval_block: {
+    func: args => {
+      return `sink::for_each(${args})`
+    },
+  },
+}
+_FlowBlocks.prototype.max = {
+  text: 'Max',
+  type: 'sink',
+  kind: 'normal',
+  source: 'original',
+  description: 'Set the variable to the maximum value',
+  inputNodes: [
+    {
+      text: 'In',
+      name: 'in',
+      description: 'The incoming value',
+      type: ['number'],
+    },
+    {
+      text: 'Var',
+      name: 'var',
+      description: 'Variable',
+      type: ['object', 'func'],
+    },
+  ],
+  outputNodes: null,
+  default: [undefined], // default here is for default inline data instead of input
+  eval_block: {
+    pipeline_type: 'sink',
+    type: 'component',
+    func: data => {
+      return `sink::max(${data})`
+    },
+  },
+  run: function (p, o, draw, input, a) {
+    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
+  },
+}
+_FlowBlocks.prototype.min = {
+  text: 'Min',
+  type: 'sink',
+  kind: 'normal',
+  source: 'original',
+  description: 'Set the variable to the minimum value',
+  inputNodes: [
+    {
+      text: 'In',
+      name: 'in',
+      description: 'The incoming value',
+      type: ['number'],
+    },
+    {
+      text: 'Var',
+      name: 'var',
+      description: 'Variable',
+      type: ['object', 'func'],
+    },
+  ],
+  outputNodes: null,
+  default: [undefined], // default here is for default inline data instead of input
+  eval_block: {
+    pipeline_type: 'sink',
+    type: 'component',
+    func: data => {
+      return `sink::min(${data})`
+    },
+  },
+  run: function (p, o, draw, input, a) {
+    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
+  },
+}
+/*
+_FlowBlocks.prototype.print = {
+  text: 'Print',
+  type: 'sink',
+  kind: 'iinput',
+  source: 'original',
+  description: 'Print the value',
+  inputNodes: [
+    {
+      text: 'In',
+      name: 'in',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+  ],
+  outputNodes: null,
+  default: ['\n'], // default here is for default inline data instead of input
+  eval_block: {
+    pipeline_type: 'sink',
+    type: 'component',
+    func: data => {
+      console.log(data)
+      return `sink::print('${data}')`
+    },
+  },
+  run: function (p, o, draw, input, a) {
+    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
+  },
+  // 'slider' kind block special
+  inlineData: [
+    {
+      name: 'Seperator',
+      description: 'Number of values to take',
+      type: ['object', 'string'],
+    },
+  ],
+}
+*/

@@ -200,20 +200,19 @@ const place = (ind, grid, pblock) => {
     }
     case 'sink':
       let t = []
-      return {
-        t: [
-          func([
-            ...args,
-            ...get_args(grid, pblock)
-              .map(e => {
-                const { t: td } = place(ind, grid, e)
-                t = [...t, td].flat()
-                return td
-              })
-              .flat(),
-          ]),
-        ],
-      }
+      let f = []
+      let tree = func([
+        ...args,
+        ...get_args(grid, pblock)
+          .map(e => {
+            const { f: fd, t: td } = place(ind, grid, e)
+            t = [...t, td].flat()
+            f = [...f, fd].flat()
+            return td
+          })
+          .flat(),
+      ])
+      return { f, t: [tree, ...t] }
     case 'func': {
       const _inp = inp(grid, pblock)
       const { f = [], t = [] } = _inp && place(ind, grid, _inp[0])

@@ -21,9 +21,12 @@ _FlowBlocks.prototype.addValue = {
     pipeline_type: 'funcs',
     type: 'function',
     name: 'addValue',
-    variable_name: args => `addValue${args}`,
+    variable_name: args =>
+      `addValue${args.map(e => String(e).replace('.', '_'))}`,
     func: args => {
-      return `auto addValue${args} = [](auto a){ return a + ${args}; }`
+      return `auto addValue${args.map(e =>
+        String(e).replace('.', '_')
+      )} = [](auto a){ return a + ${args}; }`
     },
   },
   run: function (p, o, draw, a) {
