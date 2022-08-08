@@ -4,10 +4,17 @@ import { valid } from '../../method'
 _FlowBlocks.prototype.addValue = {
   text: 'Add value',
   type: 'func',
-  kind: 'input',
+  kind: 'iinput',
   source: 'original',
   description: 'Adds to incoming value',
-  inputNodes: null,
+  inputNodes: [
+    {
+      text: 'Func',
+      name: 'func',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+  ],
   outputNodes: [
     {
       text: 'val',
@@ -21,13 +28,11 @@ _FlowBlocks.prototype.addValue = {
     pipeline_type: 'funcs',
     type: 'function',
     name: 'addValue',
-    variable_name: args =>
-      `addValue${args.map(e => String(e).replace('.', '_'))}`,
-    func: args => {
-      return `auto addValue${args.map(e =>
-        String(e).replace('.', '_')
-      )} = [](auto a){ return a + ${args}; }`
+    variable_name: ([val, f]) => {
+      if (!Boolean(f) || f.length === 0) return `_addValue(${val})`
+      return `_addValue_(${val})(${f})`
     },
+    func: () => '',
   },
   run: function (p, o, draw, a) {
     o[0] = valid(a, this.default[0])
@@ -47,7 +52,14 @@ _FlowBlocks.prototype.even = {
   kind: 'inline',
   source: 'original',
   description: 'Function to check if the value is even',
-  inputNodes: null,
+  inputNodes: [
+    {
+      text: 'Func',
+      name: 'func',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+  ],
   outputNodes: [
     {
       text: 'Even?',
@@ -61,10 +73,11 @@ _FlowBlocks.prototype.even = {
     pipeline_type: 'funcs',
     type: 'function',
     name: 'even',
-    variable_name: args => `even`,
-    func: args => {
-      return `auto even = [](auto a){ return (a%2) == 0; }`
+    variable_name: ([f]) => {
+      if (!Boolean(f) || f.length === 0) return `_even`
+      return `_even_(${f})`
     },
+    func: () => '',
   },
   run: function (p, o, draw, a, b) {
     o[0] = a && b
@@ -97,12 +110,48 @@ _FlowBlocks.prototype.negate = {
     pipeline_type: 'funcs',
     type: 'function',
     name: 'not',
-    variable_name: args => {
-      return `negate(${args})`
+    variable_name: ([f]) => {
+      if (!Boolean(f) || f.length === 0) return `_negate`
+      return `_negate_(${f})`
     },
-    func: args => {
-      return `auto negate = [](auto g) {\n\t\treturn [=](auto x) { return !g(x); }; \n\t}`
+    func: () => '',
+  },
+  run: function (p, o, draw, a, b) {
+    o[0] = a && b
+  },
+}
+_FlowBlocks.prototype.not = {
+  text: 'Not',
+  type: 'func',
+  kind: 'inline',
+  source: 'original',
+  description: 'Negate the previous function',
+  inputNodes: [
+    {
+      text: 'Func',
+      name: 'func',
+      description: 'The incoming value',
+      type: ['object', 'number'],
     },
+  ],
+  outputNodes: [
+    {
+      text: 'Not',
+      name: 'not',
+      description: 'Negate',
+      type: ['object', 'boolean'],
+    },
+  ],
+  default: [undefined],
+  eval_block: {
+    pipeline_type: 'funcs',
+    type: 'function',
+    name: 'not',
+    variable_name: ([f]) => {
+      if (!Boolean(f) || f.length === 0) return `_not_`
+      return `_not__(${f})`
+    },
+    func: () => '',
   },
   run: function (p, o, draw, a, b) {
     o[0] = a && b
@@ -111,11 +160,18 @@ _FlowBlocks.prototype.negate = {
 _FlowBlocks.prototype.greaterThan = {
   text: '>',
   type: 'func',
-  kind: 'input',
+  kind: 'iinput',
   source: 'original',
   description:
     'Checks if the incoming value is greater than the specified value',
-  inputNodes: null,
+  inputNodes: [
+    {
+      text: 'Func',
+      name: 'func',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+  ],
   outputNodes: [
     {
       text: 'val',
@@ -126,10 +182,11 @@ _FlowBlocks.prototype.greaterThan = {
   ],
   default: [0],
   eval_block: {
-    variable_name: args => `greater_than_${args}`,
-    func: args => {
-      return `auto greater_than_${args} = [](auto a){ return a > ${args}; }`
+    variable_name: ([val, f]) => {
+      if (!Boolean(f) || f.length === 0) return `_greater_than(${val})`
+      return `_greater_than_(${val})(${f})`
     },
+    func: () => '',
   },
   run: function (p, o, draw, a) {
     o[0] = valid(a, this.default[0])
@@ -146,11 +203,18 @@ _FlowBlocks.prototype.greaterThan = {
 _FlowBlocks.prototype.greaterThanEquals = {
   text: '>=',
   type: 'func',
-  kind: 'input',
+  kind: 'iinput',
   source: 'original',
   description:
     'Checks if the incoming value is greater than the specified value',
-  inputNodes: null,
+  inputNodes: [
+    {
+      text: 'Func',
+      name: 'func',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+  ],
   outputNodes: [
     {
       text: 'val',
@@ -161,10 +225,11 @@ _FlowBlocks.prototype.greaterThanEquals = {
   ],
   default: [0],
   eval_block: {
-    variable_name: args => `greater_than_equals_${args}`,
-    func: args => {
-      return `auto greater_than_equals_${args} = [](auto a){ return a > ${args}; }`
+    variable_name: ([val, f]) => {
+      if (!Boolean(f) || f.length === 0) return `_greater_than_equal(${val})`
+      return `_greater_than_equal_(${val})(${f})`
     },
+    func: () => '',
   },
   run: function (p, o, draw, a) {
     o[0] = valid(a, this.default[0])
@@ -181,10 +246,17 @@ _FlowBlocks.prototype.greaterThanEquals = {
 _FlowBlocks.prototype.lessThan = {
   text: '<',
   type: 'func',
-  kind: 'input',
+  kind: 'iinput',
   source: 'original',
   description: 'Checks if the incoming value is less than the specified value',
-  inputNodes: null,
+  inputNodes: [
+    {
+      text: 'Func',
+      name: 'func',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+  ],
   outputNodes: [
     {
       text: 'val',
@@ -195,10 +267,11 @@ _FlowBlocks.prototype.lessThan = {
   ],
   default: [0],
   eval_block: {
-    variable_name: args => `less_than_equals_${args}`,
-    func: args => {
-      return `auto greater_than_${args} = [](auto a){ return a > ${args}; }`
+    variable_name: ([val, f]) => {
+      if (!Boolean(f) || f.length === 0) return `_less_than(${val})`
+      return `_less_than_(${val})(${f})`
     },
+    func: () => '',
   },
   run: function (p, o, draw, a) {
     o[0] = valid(a, this.default[0])
@@ -215,10 +288,17 @@ _FlowBlocks.prototype.lessThan = {
 _FlowBlocks.prototype.lessThanEquals = {
   text: '<=',
   type: 'func',
-  kind: 'input',
+  kind: 'iinput',
   source: 'original',
   description: 'Checks if the incoming value is less than the specified value',
-  inputNodes: null,
+  inputNodes: [
+    {
+      text: 'Func',
+      name: 'func',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+  ],
   outputNodes: [
     {
       text: 'val',
@@ -229,10 +309,11 @@ _FlowBlocks.prototype.lessThanEquals = {
   ],
   default: [0],
   eval_block: {
-    variable_name: args => `less_than_equals_${args}`,
-    func: args => {
-      return `auto less_than_equals_${args} = [](auto a){ return a <= ${args}; }`
+    variable_name: ([val, f]) => {
+      if (!Boolean(f) || f.length === 0) return `_less_than_equal(${val})`
+      return `_less_than_equal_(${val})(${f})`
     },
+    func: () => '',
   },
   run: function (p, o, draw, a) {
     o[0] = valid(a, this.default[0])
@@ -249,11 +330,18 @@ _FlowBlocks.prototype.lessThanEquals = {
 _FlowBlocks.prototype.mod = {
   text: 'Mod',
   type: 'func',
-  kind: 'input',
+  kind: 'iinput',
   source: 'original',
   description:
     'Checks if the incoming value is greater than the specified value',
-  inputNodes: null,
+  inputNodes: [
+    {
+      text: 'Func',
+      name: 'func',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+  ],
   outputNodes: [
     {
       text: 'val',
@@ -262,12 +350,13 @@ _FlowBlocks.prototype.mod = {
       type: ['object', 'func'],
     },
   ],
-  default: [0],
+  default: [1],
   eval_block: {
-    variable_name: args => `modulo_${args}`,
-    func: args => {
-      return `auto modulo_${args} = [](auto a){ return a % ${args}; }`
+    variable_name: ([val, f]) => {
+      if (!Boolean(f) || f.length === 0) return `_mod(${val})`
+      return `_mod_(${val})(${f})`
     },
+    func: () => '',
   },
   run: function (p, o, draw, a) {
     o[0] = valid(a, this.default[0])
@@ -287,7 +376,14 @@ _FlowBlocks.prototype.add = {
   kind: 'inline',
   source: 'original',
   description: 'Adds two numbers',
-  inputNodes: null,
+  inputNodes: [
+    {
+      text: 'Func',
+      name: 'func',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+  ],
   outputNodes: [
     {
       text: 'val',
@@ -298,10 +394,11 @@ _FlowBlocks.prototype.add = {
   ],
   default: [0],
   eval_block: {
-    variable_name: args => `add`,
-    func: args => {
-      return `auto add = [](auto a, auto b){ return a + b; }`
+    variable_name: ([f]) => {
+      if (!Boolean(f) || f.length === 0) return `_add`
+      return `_add_(${f})`
     },
+    func: () => '',
   },
   run: function (p, o, draw, a) {
     o[0] = valid(a, this.default[0])
@@ -313,7 +410,14 @@ _FlowBlocks.prototype.max = {
   kind: 'inline',
   source: 'original',
   description: 'Returns the max of two numbers',
-  inputNodes: null,
+  inputNodes: [
+    {
+      text: 'Func',
+      name: 'func',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+  ],
   outputNodes: [
     {
       text: 'val',
@@ -324,7 +428,7 @@ _FlowBlocks.prototype.max = {
   ],
   default: [0],
   eval_block: {
-    variable_name: args => `max`,
+    variable_name: args => `_max`,
     func: args => {
       return `auto max = [](auto a, auto b){ return a > b ? a : b; }`
     },
@@ -339,7 +443,14 @@ _FlowBlocks.prototype.print_func = {
   kind: 'inline',
   source: 'original',
   description: 'Returns the max of two numbers',
-  inputNodes: null,
+  inputNodes: [
+    {
+      text: 'Func',
+      name: 'func',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+  ],
   outputNodes: [
     {
       text: 'val',
@@ -350,12 +461,45 @@ _FlowBlocks.prototype.print_func = {
   ],
   default: [0],
   eval_block: {
-    variable_name: args => `print`,
-    func: args => {
-      return `auto print = [](auto a){ std::cout << a << "\\n"; }`
+    variable_name: ([f]) => {
+      if (!Boolean(f) || f.length === 0) return `_print`
+      return `_print_(${f})`
     },
+    func: () => '',
   },
   run: function (p, o, draw, a) {
     o[0] = valid(a, this.default[0])
+  },
+}
+
+_FlowBlocks.prototype.id = {
+  text: 'Id',
+  type: 'func',
+  kind: 'inline',
+  source: 'original',
+  description: 'Returns the value',
+  inputNodes: null,
+  outputNodes: [
+    {
+      text: 'Not',
+      name: 'not',
+      description: 'Negate',
+      type: ['object', 'boolean'],
+    },
+  ],
+  default: [undefined],
+  eval_block: {
+    pipeline_type: 'funcs',
+    type: 'function',
+    name: 'not',
+    variable_name: args => {
+      return `id`
+    },
+    func: args => {
+      return `auto id = [](auto x) { return x; }`
+    },
+  },
+  run: function (p, o, draw, a, b) {
+    o[0] = a && b
   },
 }

@@ -49,6 +49,32 @@ _FlowBlocks.prototype.range = {
     },
   ],
 }
+_FlowBlocks.prototype.in = {
+  text: 'In',
+  type: 'gen',
+  kind: 'inline',
+  source: 'original',
+  description: 'For use in the function factory (entry point)',
+  inputNodes: null,
+  outputNodes: [
+    {
+      text: 'val',
+      name: 'number',
+      description: 'The new value',
+      type: ['object', 'number'],
+    },
+  ],
+  default: [],
+  eval_block: {
+    func: data => {
+      return ``
+    },
+  },
+  run: function (p, o, draw, a) {
+    o[0] = valid(a, this.default[0])
+  },
+  inlineData: [],
+}
 _FlowBlocks.prototype.counter = {
   text: 'Counter',
   type: 'gen',

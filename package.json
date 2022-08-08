@@ -1,6 +1,6 @@
 {
-  "name": "b5",
-  "version": "0.2.2",
+  "name": "flow_nodes",
+  "version": "0.0.0",
   "private": true,
   "dependencies": {
     "blob-polyfill": "^7.0.20220408",
@@ -22,12 +22,13 @@
     "build": "react-scripts build",
     "run-test": "react-scripts test",
     "test": "npm-run-all do-gulp run-test",
+    "predeploy": "npm run build",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,html,css}\"",
     "css": "NODE_ENV=development npm-run-all do-gulp",
     "start": "react-scripts start",
-    "deploy": "NODE_ENV=production npm-run-all do-gulp build",
+    "ghp": "gh-pages -d build",
+    "deploy": "NODE_ENV=production npm-run-all do-gulp build ghp",
     "submodule": "cd src/b5.js && npm i && cd ../..",
-    "netlify": "run-s submodule deploy",
     "setup": "npm install && npm run submodule"
   },
   "eslintConfig": {
@@ -52,6 +53,7 @@
     "autoprefixer": "^10.4.7",
     "cssnano": "^5.1.12",
     "del": "^7.0.0",
+    "gh-pages": "^4.0.0",
     "gulp": "^4.0.2",
     "gulp-postcss": "^9.0.1",
     "lint-staged": "^13.0.3",

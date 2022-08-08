@@ -58,15 +58,15 @@ const connected_components = nodes => {
 const out = (grid, pblock) => {
   const outArr = Object.values(pblock.output ?? {})
     .flat()
-    .sort()
     .map(([row, col]) => grid[row][col])
   return outArr
 }
 
 const inp = (grid, pblock) => {
   const inpArr = Object.values(pblock.input ?? {})
-    .map(([row, col]) => [row, col])
     .filter(Boolean)
+    .map(([row, col]) => [row, col])
+
   return inpArr.map(([row, col]) => grid[row][col])
 }
 
@@ -75,50 +75,6 @@ const get_args = (grid, pblock) => {
   return [...args]
 }
 
-/*
-const place = (grid, pblock) => {
-  const { name, type, eval_block, args = [] } = pblock
-  const { func } = eval_block
-  let blk = { name, func, data: args }
-  switch (type) {
-    case 'gen':
-      return [blk, ...place(grid, out(grid, pblock)[0])]
-    case 'pipe':
-      return [
-        {
-          ...blk,
-          data: [
-            ...args,
-            ...get_args(grid, pblock)
-              .map(e => place(grid, e))
-              .flat(),
-          ],
-        },
-        ...place(grid, out(grid, pblock)[0]),
-      ]
-    case 'redirect':
-      return [
-        {
-          ...blk,
-          data: [
-            ...args,
-            ...get_args(grid, pblock)
-              .map(e => place(grid, e))
-              .flat(),
-            ...out(grid, pblock).map(o => place(grid, o)),
-          ],
-        },
-      ]
-    case 'sink':
-      return [blk]
-    case 'func':
-      return [blk]
-    default:
-      console.error('NOT IMPLEMENTED')
-      return []
-  }
-}
-*/
 const indent = indent => {
   return '\t'.repeat(indent)
 }
@@ -138,7 +94,7 @@ const place = (ind, grid, pblock) => {
       return { f, t: [sep + func(args), t].join(`\n${sep}>>= `) }
     }
     case 'pipe': {
-      let { f = [], t } = place(ind, grid, out(grid, pblock)[0])
+      let { f = [], t = [] } = place(ind, grid, out(grid, pblock)[0])
       let tree = [
         func([
           ...args,
@@ -151,7 +107,9 @@ const place = (ind, grid, pblock) => {
             .flat(),
         ]),
         t,
-      ].join(`\n${sep}>>= `)
+      ]
+        .filter(Boolean)
+        .join(`\n${sep}>>= `)
       return { f, t: tree }
     }
     case 'tee': {
@@ -198,7 +156,7 @@ const place = (ind, grid, pblock) => {
       ]
       return { f, t: tree }
     }
-    case 'sink':
+    case 'sink': {
       let t = []
       let f = []
       let tree = func([
@@ -212,15 +170,23 @@ const place = (ind, grid, pblock) => {
           })
           .flat(),
       ])
-      return { f, t: [tree, ...t] }
-    case 'func': {
-      const _inp = inp(grid, pblock)
-      const { f = [], t = [] } = _inp && place(ind, grid, _inp[0])
-      return {
-        f: [func([...args, ...t]), ...f],
-        t: [variable_name([...args, ...t])],
-      }
+      return { f, t: tree }
     }
+    case 'func': {
+      let t = []
+      let f = []
+      for (const curr of inp(grid, pblock)) {
+        const { f: cf, t: ct } = place(ind, grid, curr)
+        f = [...f, ...cf].flat()
+        t = [...t, ...ct].flat()
+      }
+      let fun = [func([...args, t])]
+      let tree = [variable_name([...args, t])]
+      return { f: [...fun, ...f], t: [tree] }
+    }
+    //case 'function': {
+    //  console.log(pblock)
+    //}
     case 'variable':
       return { t: [pblock.name] }
     default: {
@@ -234,7 +200,7 @@ const all_populated = components => {
   for (const component of components) {
     const { input, output } = component
     let ok = true
-    if (input) {
+    if (component.p_type !== 'func' && input) {
       const inputArr = Object.values(input)
       ok &= inputArr.length > 0 && !inputArr.some?.(e => !e)
     }
@@ -257,6 +223,10 @@ const format_variables = variables => {
     res.push({ name, data: block?.inlineData })
   }
   return res
+}
+
+const find_gen = arr => {
+  return arr.find(e => e.type === 'gen')
 }
 
 const parse_nodes = grid => {
@@ -289,16 +259,54 @@ const parse_nodes = grid => {
     }
   }
   const ccs = connected_components(nodes)
-  //TODO: Fix CC
 
   let res = {
     variables: new Set(),
     functions: new Set(),
     blocks: [],
   }
+  /*
+  //factory functions
+  for (let fac_ccs of grid?.factory?.function) {
+    const sblocks = fac_ccs.blocks
+    let snodes = {}
+    for (let [i, row] of Object.entries(sblocks)) {
+      for (let [j, cell] of Object.entries(row)) {
+        if (cell) {
+          if (!snodes[i]) snodes[i] = {}
+          snodes[i][j] = {
+            uuid: cell.uuid,
+            type: cell.type,
+            p_type: blockData[cell.name]?.p_type ?? cell.type,
+            name: cell.name,
+            args: cell.inlineData,
+            eval_block: blockData[cell.name]?.eval_block,
+            input: cell.input,
+            output: cell.output,
+            row: i,
+            col: j,
+          }
+        }
+      }
+    }
+    const fccs = connected_components(snodes)
+    for (let cc of fccs) {
+      //if (!all_populated(cc)) continue
+      //console.log("this oone", cc, place(1, snodes, find_gen(cc)))
+
+      const {row, col, ...blk} = find_gen(cc)
+      const { v = [], f = [], t = [] } = place(1, snodes, blk)
+      //v && v.forEach(e => res.variables.add(e)) //add variables
+      f && f.forEach(e => res.functions.add(e)) //add functions
+      console.log(f,t)
+      //t && res.blocks.push(t)
+    }
+  }
+  */
+
   for (let cc of ccs) {
     if (!all_populated(cc)) continue
-    const { v = [], f = [], t = [] } = place(1, nodes, cc[0])
+    const { v = [], f = [], t = [] } = place(1, nodes, find_gen(cc))
     v && v.forEach(e => res.variables.add(e)) //add variables
     f && f.forEach(e => res.functions.add(e)) //add functions
     t && res.blocks.push(t)
