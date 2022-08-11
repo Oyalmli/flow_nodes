@@ -30,11 +30,18 @@ const BlockDrawer = ({ props }) => {
       ..._b5BlocksObject.custom,
       ..._b5BlocksObject.library,
     } // Merge all available blocks
-    let res = {}
+    let res = {
+      func: {},
+      gen: {},
+      /*mod: {},*/ pipe: {},
+      redirect: {},
+      sink: {},
+      variable: {},
+      comment: {},
+    }
     let idx = 0
     for (const [name, blockD] of Object.entries(blockData)) {
       if (!blockD.text) continue
-      if (!res[blockD.type]) res[blockD.type] = {}
       res[blockD.type][name] = {
         item: { ...blockD, name: name },
         refIndex: idx++,

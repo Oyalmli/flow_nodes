@@ -21,7 +21,7 @@ export const introEditor = {
           uuid: 'f386f6ff-a84d-4dec-abc8-bd2bf3c22688',
           inlineData: [0, 100, 1],
           type: 'gen',
-          output: { 0: [['1', '1', '0']] },
+          output: { 0: [] },
         },
         2: {
           name: 'addValue',
@@ -45,7 +45,7 @@ export const introEditor = {
           name: 'transform',
           source: 'original',
           uuid: 'e9c28f68-7dc8-498d-9d1e-96b156a29afc',
-          input: { 0: ['0', '1', '0'], 1: ['0', '2', '0'] },
+          input: { 0: null, 1: ['0', '2', '0'] },
           type: 'pipe',
           output: { 0: [['2', '1', '0']] },
         },
