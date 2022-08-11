@@ -34,7 +34,7 @@ export default class BlockSearch extends Component {
     _b5Search.update(this.props.codeCanvasSource)
     document.addEventListener('mousedown', this.searchingMouseDown)
     document.addEventListener('keydown', this.handleKeydown)
-    this.inputRef.focus()
+    //this.inputRef.focus()
 
     window.sessionStorage.setItem('color', method.randomColor())
   }
@@ -136,21 +136,7 @@ export default class BlockSearch extends Component {
   }
 
   render() {
-    return (
-      <div className="blockSearchHolder">
-        <div ref={e => (this.blockSearch = e)} className="blockSearch">
-          <input
-            ref={e => (this.inputRef = e)}
-            className="searchInput"
-            placeholder="Search name, type, or description"
-            onChange={this.search}
-          />
-          {this.state.result.length > 0 && (
-            <BlockList blocks={this.state.result} focus={this.state.focus} />
-          )}
-        </div>
-      </div>
-    )
+    return <div ref={e => (this.blockSearch = e)} className="blockSearch"></div>
   }
 }
 

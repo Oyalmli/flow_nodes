@@ -11,6 +11,7 @@ import * as secMethod from './sectionMethod.js'
 import Playground from '../playground/playground.js'
 import Factory from '../factory/factory.js'
 import BlockSearch from '../blockSearch/blockSearch.js'
+import BlockDrawer from '../blockDrawer/blockDrawer.js'
 import FileUpload from './fileUpload.js'
 import '../../postcss/components/editor/editor.css'
 
@@ -92,6 +93,7 @@ export default class Editor extends Component {
 
     this.leftElement = createRef()
     this.rightElement = createRef()
+    this.bottomElement = createRef()
     this.separator = createRef()
 
     // Create ref for each codeCanvas
@@ -758,7 +760,17 @@ export default class Editor extends Component {
             />
           </div>
         </div>
-
+        {searching && (
+          <BlockDrawer
+            breakSearch={this.breakSearch}
+            collect={this.collectEditorData}
+            factoryData={editor.factory}
+            codeCanvasSource={source}
+            codeCanvasIndex={index}
+            roomY={y}
+            roomX={x}
+          />
+        )}
         {searching && (
           <BlockSearch
             breakSearch={this.breakSearch}
