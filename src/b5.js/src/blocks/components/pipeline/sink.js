@@ -130,7 +130,7 @@ _FlowBlocks.prototype.for_each = {
     },
   },
 }
-_FlowBlocks.prototype.max = {
+_FlowBlocks.prototype.sink_max = {
   text: 'Max',
   type: 'sink',
   kind: 'normal',
@@ -196,6 +196,66 @@ _FlowBlocks.prototype.min = {
     o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
   },
 }
+_FlowBlocks.prototype.sink_set_var = {
+  text: 'Set Var',
+  type: 'sink',
+  kind: 'normal',
+  source: 'original',
+  description: 'Sets the variable to the incoming value',
+  inputNodes: [
+    {
+      text: 'In',
+      name: 'in',
+      description: 'The incoming value',
+      type: ['number'],
+    },
+    {
+      text: 'Var',
+      name: 'var',
+      description: 'Variable',
+      type: ['object', 'func'],
+    },
+  ],
+  outputNodes: null,
+  default: [undefined], // default here is for default inline data instead of input
+  eval_block: {
+    pipeline_type: 'sink',
+    type: 'component',
+    func: data => {
+      return `sink::set_var(${data})`
+    },
+  },
+  run: function (p, o, draw, input, a) {
+    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
+  },
+}
+_FlowBlocks.prototype.out_block = {
+  text: 'Out',
+  type: 'sink',
+  kind: 'inline',
+  source: 'original',
+  description: 'For use in the function factory (exit point)',
+  inputNodes: [
+    {
+      text: 'val',
+      name: 'number',
+      description: 'The new value',
+      type: ['object', 'number'],
+    },
+  ],
+  outputNodes: null,
+  default: [undefined],
+  eval_block: {
+    func: data => {
+      return ``
+    },
+  },
+  run: function (p, o, draw, a) {
+    o[0] = valid(a, this.default[0])
+  },
+  inlineData: [],
+}
+
 /*
 _FlowBlocks.prototype.print = {
   text: 'Print',

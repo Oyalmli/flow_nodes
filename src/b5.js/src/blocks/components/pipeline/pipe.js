@@ -472,13 +472,13 @@ _FlowBlocks.prototype.tee = {
   ],
   outputNodes: [
     {
-      text: 'a',
+      text: 'Out',
       name: 'out',
       description: 'The outgoing value',
       type: ['object', 'number'],
     },
     {
-      text: 'b',
+      text: 'Brach',
       name: 'out',
       description: 'The outgoing value',
       type: ['object', 'number'],
@@ -488,6 +488,179 @@ _FlowBlocks.prototype.tee = {
   eval_block: {
     func: data => {
       return `pipe::tee(${data})`
+    },
+  },
+  run: function (p, o, draw, input, a) {
+    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
+  },
+}
+_FlowBlocks.prototype.moving_avg = {
+  text: 'Moving Average',
+  type: 'pipe',
+  kind: 'iinput',
+  source: 'original',
+  description: 'Take a given number of values from the generator',
+  inputNodes: [
+    {
+      text: 'In',
+      name: 'in',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+  ],
+  outputNodes: [
+    {
+      text: 'Out',
+      name: 'out',
+      description: 'The outgoing value',
+      type: ['object', 'number'],
+    },
+  ],
+  default: ['double', 5], // default here is for default inline data instead of input
+  eval_block: {
+    pipeline_type: 'mod',
+    type: 'function',
+    func: ([type, num]) => {
+      return `pipe::moving_avg<${type}, ${num}>()`
+    },
+  },
+  inlineData: [
+    {
+      name: 'Drop',
+      description: 'Number of values to drop',
+      type: ['object', 'number'],
+    },
+    {
+      name: 'Drop',
+      description: 'Number of values to drop',
+      type: ['object', 'number'],
+    },
+  ],
+}
+_FlowBlocks.prototype.pipe_set_var = {
+  text: 'Set Var',
+  type: 'pipe',
+  kind: 'normal',
+  source: 'original',
+  description: 'Sets the variable to the incoming value',
+  inputNodes: [
+    {
+      text: 'In',
+      name: 'in',
+      description: 'The incoming value',
+      type: ['number'],
+    },
+    {
+      text: 'Var',
+      name: 'var',
+      description: 'Variable',
+      type: ['object', 'func'],
+    },
+  ],
+  outputNodes: [
+    {
+      text: 'Out',
+      name: 'out',
+      description: 'The outgoing value',
+      type: ['object', 'number'],
+    },
+  ],
+  default: [undefined], // default here is for default inline data instead of input
+  eval_block: {
+    func: data => {
+      return `pipe::set_var(${data})`
+    },
+  },
+  run: function (p, o, draw, input, a) {
+    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
+  },
+}
+_FlowBlocks.prototype.restricted_avg = {
+  text: 'Restricted Avg',
+  type: 'pipe',
+  kind: 'iinput',
+  source: 'original',
+  description: 'Sets the variable to the incoming value',
+  inputNodes: [
+    {
+      text: 'In',
+      name: 'in',
+      description: 'The incoming value',
+      type: ['number'],
+    },
+  ],
+  outputNodes: [
+    {
+      text: 'Out',
+      name: 'out',
+      description: 'The outgoing value',
+      type: ['object', 'number'],
+    },
+  ],
+  inlineData: [
+    {
+      name: 'tp',
+      description: 'Number of values to drop',
+      type: ['object', 'number'],
+    },
+    {
+      name: 'span',
+      description: 'Number of values to drop',
+      type: ['object', 'number'],
+    },
+    {
+      name: 'max diff',
+      description: 'Number of values to drop',
+      type: ['object', 'number'],
+    },
+    {
+      name: 'max skip',
+      description: 'Number of values to drop',
+      type: ['object', 'number'],
+    },
+  ],
+  default: ['double', 5, undefined, undefined], // default here is for default inline data instead of input
+  eval_block: {
+    func: ([tp, to_take, max_diff, skip]) => {
+      return `restricted_avg<${tp}, ${to_take}>(${max_diff},${skip})`
+    },
+  },
+  run: function (p, o, draw, input, a) {
+    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
+  },
+}
+_FlowBlocks.prototype.pipe_get_var = {
+  text: 'Get Var',
+  type: 'pipe',
+  kind: 'normal',
+  source: 'original',
+  description: 'Gets the variable, replacing the incoming one',
+  inputNodes: [
+    {
+      text: 'In',
+      name: 'in',
+      description: 'The incoming value',
+      type: ['number'],
+    },
+    {
+      text: 'Var',
+      name: 'var',
+      description: 'Variable',
+      type: ['object', 'func'],
+    },
+  ],
+  outputNodes: [
+    {
+      text: 'Out',
+      name: 'out',
+      description: 'The outgoing value',
+      type: ['object', 'number'],
+    },
+  ],
+  default: [undefined], // default here is for default inline data instead of input
+  eval_block: {
+    func: data => {
+      return `pipe::get_var(${data})`
     },
   },
   run: function (p, o, draw, input, a) {

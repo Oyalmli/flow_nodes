@@ -177,16 +177,7 @@ const CodeView = ({ data }) => {
         <div onClick={_handleExpand} className="expand"></div>
       </div>
 
-      {loop ? (
-        <JTD data={data} />
-      ) : (
-        <img
-          id="viewerNoLoop"
-          className="viewerNoLoop"
-          src={ViewerNoLoop}
-          alt="PAUSED"
-        />
-      )}
+      <JTD data={data} />
     </div>
   )
 }

@@ -55,7 +55,14 @@ _FlowBlocks.prototype.in = {
   kind: 'inline',
   source: 'original',
   description: 'For use in the function factory (entry point)',
-  inputNodes: null,
+  inputNodes: [
+    {
+      text: 'In',
+      name: 'in',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+  ],
   outputNodes: [
     {
       text: 'val',

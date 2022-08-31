@@ -136,7 +136,7 @@ export default class BlockSearch extends Component {
   }
 
   render() {
-    return <div ref={e => (this.blockSearch = e)} className="blockSearch"></div>
+    return <></>
   }
 }
 
@@ -162,33 +162,45 @@ const BlockList = ({ blocks, focus }) => {
   }, [listRef, focusRef])
 
   return (
-    <div className="blockList" ref={listRef}>
-      {blocks.map((b, i) => {
-        return (
-          <div
-            key={'blockListBlock ' + b.item.name + i}
-            className="searchBlockWrapper"
-          >
-            <div className="wrapper">
-              <BlockRendererLite
-                name={b.item.name}
-                source={b.item.source}
-                focus={i === focus}
-                isRenaming={false}
-                ref={{
-                  block: i === focus ? focusRef : null,
-                }}
-                draggable={false} // ! Should be enabled
-              />
-              <div className={'description' + (i === focus ? ' focused' : '')}>
-                <div>
-                  {_truncateDescription(_preDescription(b.item.description))}
-                </div>
+    <>
+      {false && (
+        <div className="blockList" ref={listRef}>
+          {blocks.map((b, i) => {
+            return (
+              <div
+                key={'blockListBlock ' + b.item.name + i}
+                className="searchBlockWrapper"
+              >
+                {false && (
+                  <div className="wrapper">
+                    <BlockRendererLite
+                      name={b.item.name}
+                      source={b.item.source}
+                      focus={i === focus}
+                      isRenaming={false}
+                      ref={{
+                        block: i === focus ? focusRef : null,
+                      }}
+                      draggable={false} // ! Should be enabled
+                    />
+                    <div
+                      className={
+                        'description' + (i === focus ? ' focused' : '')
+                      }
+                    >
+                      <div>
+                        {_truncateDescription(
+                          _preDescription(b.item.description)
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
-          </div>
-        )
-      })}
-    </div>
+            )
+          })}
+        </div>
+      )}
+    </>
   )
 }

@@ -1,6 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { CopyBlock, atomOneLight } from 'react-code-blocks'
+import React, { useEffect, useState, forwardRef, useRef } from 'react'
 import _b5BlocksObject from '../../../../b5.js/src/blocks/blocksObjectWrapper.js'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import dracula from 'react-syntax-highlighter/dist/esm/styles/prism/one-light.js'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { ToastContainer, toast, Slide } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import { AwesomeButton } from 'react-awesome-button'
+import 'react-awesome-button/dist/styles.css'
+import CopyIcon from '../../../../img/icons/copy.svg'
+import CopiedIcon from '../../../../img/icons/copied.svg'
 
 const zip = (a, b) =>
   Array.from(Array(Math.max(b?.length, a?.length)), (_, i) => [a[i], b[i]])
@@ -76,7 +84,7 @@ const get_args = (grid, pblock) => {
 }
 
 const indent = indent => {
-  return '\t'.repeat(indent)
+  return '  '.repeat(indent)
 }
 
 const place = (ind, grid, pblock) => {
@@ -106,7 +114,7 @@ const place = (ind, grid, pblock) => {
             })
             .flat(),
         ]),
-        t,
+        t.length > 0 ? t : undefined,
       ]
         .filter(Boolean)
         .join(`\n${sep}>>= `)
@@ -114,7 +122,7 @@ const place = (ind, grid, pblock) => {
     }
     case 'tee': {
       const [a, b] = out(grid, pblock).map(e => place(ind, grid, e))
-      let tree = [func([...args, a.t]), b.t].join(`\n${sep}>>= `)
+      let tree = [func([...args, b.t]), a.t].join(`\n${sep}>>= `)
       return { f: [a.f, b.f], t: tree }
     }
     case 'redirect': {
@@ -176,17 +184,22 @@ const place = (ind, grid, pblock) => {
       let t = []
       let f = []
       for (const curr of inp(grid, pblock)) {
+        if (curr.name === 'plug') continue
         const { f: cf, t: ct } = place(ind, grid, curr)
-        f = [...f, ...cf].flat()
-        t = [...t, ...ct].flat()
+        f = [...f, cf].flat()
+        t = [...t, ct].flat()
       }
       let fun = [func([...args, t])]
       let tree = [variable_name([...args, t])]
       return { f: [...fun, ...f], t: [tree] }
     }
-    //case 'function': {
-    //  console.log(pblock)
-    //}
+    case 'function': {
+      let { f = [], t = [] } = place(ind, grid, out(grid, pblock)[0])
+      let tree = [pblock.eval_block, t.length > 0 ? t : undefined]
+        .filter(Boolean)
+        .join(`\n${sep}>>= `)
+      return { f, t: tree }
+    }
     case 'variable':
       return { t: [pblock.name] }
     default: {
@@ -232,43 +245,23 @@ const find_gen = arr => {
 const parse_nodes = grid => {
   const blocks = grid?.playground?.blocks
   const variables = grid?.factory?.variable
+  const functions = grid?.factory?.function
   if (!blocks) return
+
+  let res = {
+    variables: new Set(),
+    functions: {},
+    blocks: [],
+  }
 
   const blockData = {
     ..._b5BlocksObject.original,
     ..._b5BlocksObject.custom,
     ..._b5BlocksObject.library,
   } // Merge all available blocks
-  //TODO: populate data in nodes using this
-  let nodes = {}
-  for (let [i, row] of Object.entries(blocks)) {
-    for (let [j, cell] of Object.entries(row)) {
-      if (cell) {
-        if (!nodes[i]) nodes[i] = {}
-        nodes[i][j] = {
-          uuid: cell.uuid,
-          type: cell.type,
-          p_type: blockData[cell.name]?.p_type ?? cell.type,
-          name: cell.name,
-          args: cell.inlineData,
-          eval_block: blockData[cell.name]?.eval_block,
-          input: cell.input,
-          output: cell.output,
-        }
-      }
-    }
-  }
-  const ccs = connected_components(nodes)
-
-  let res = {
-    variables: new Set(),
-    functions: new Set(),
-    blocks: [],
-  }
-  /*
   //factory functions
   for (let fac_ccs of grid?.factory?.function) {
-    const sblocks = fac_ccs.blocks
+    const { name, type, blocks: sblocks } = fac_ccs
     let snodes = {}
     for (let [i, row] of Object.entries(sblocks)) {
       for (let [j, cell] of Object.entries(row)) {
@@ -291,28 +284,48 @@ const parse_nodes = grid => {
     }
     const fccs = connected_components(snodes)
     for (let cc of fccs) {
-      //if (!all_populated(cc)) continue
-      //console.log("this oone", cc, place(1, snodes, find_gen(cc)))
-
-      const {row, col, ...blk} = find_gen(cc)
+      const { row, col, ...blk } = find_gen(cc)
       const { v = [], f = [], t = [] } = place(1, snodes, blk)
-      //v && v.forEach(e => res.variables.add(e)) //add variables
-      f && f.forEach(e => res.functions.add(e)) //add functions
-      console.log(f,t)
-      //t && res.blocks.push(t)
+      let tt = t.slice(9)
+      blockData[name] = {
+        type,
+        eval_block: name,
+      }
+      res.functions[name] = tt
     }
   }
-  */
+
+  //TODO: populate data in nodes using this
+  let nodes = {}
+  for (let [i, row] of Object.entries(blocks)) {
+    for (let [j, cell] of Object.entries(row)) {
+      if (cell) {
+        if (!nodes[i]) nodes[i] = {}
+        nodes[i][j] = {
+          uuid: cell.uuid,
+          type: cell.type,
+          p_type: blockData[cell.name]?.p_type ?? cell.type,
+          name: cell.name,
+          args: cell.inlineData,
+          eval_block: blockData[cell.name]?.eval_block,
+          input: cell.input,
+          output: cell.output,
+        }
+      }
+    }
+  }
+  const ccs = connected_components(nodes)
+
   for (let cc of ccs) {
     if (!all_populated(cc)) continue
     const { v = [], f = [], t = [] } = place(1, nodes, find_gen(cc))
     v && v.forEach(e => res.variables.add(e)) //add variables
-    f && f.forEach(e => res.functions.add(e)) //add functions
+    //f && f.forEach(e => res.functions.add(e)) //add functions
     t && res.blocks.push(t.length > 0 ? t : undefined)
   }
   res = {
+    ...res,
     variables: [...format_variables(variables)].filter(Boolean),
-    functions: [...res.functions].filter(Boolean),
     blocks: [...res.blocks].filter(Boolean),
   }
   return res
@@ -333,40 +346,99 @@ const create_view = parsed_ccs => {
   if (!parsed_ccs) return ''
   let res =
     '#include <iostream>\n#include "dfl/dfl.hpp"\n\nusing namespace dfl; \nint main() {\n'
-
   res +=
     parsed_ccs.variables.length > 0
       ? parsed_ccs.variables
-          .map(({ name, data }) => `\tauto ${name} = ${data};\n`)
-          .join('') + '\n'
+          .filter(x => x.name && x.data)
+          .map(
+            ({ name, data: [data, type] }) => `  ${type} ${name} = ${data};\n`
+          )
+          .join('')
       : ''
-  res +=
-    parsed_ccs.functions.length > 0
-      ? parsed_ccs.functions.map(e => `\t${e};\n`).join('') + '\n'
-      : ''
-  for (const line of parsed_ccs.blocks) {
-    res += line + ';\n\n'
+
+  for (const [k, v] of Object.entries(parsed_ccs.functions)) {
+    res += `  auto ${k}\n  =   ${v};\n`
   }
-  res = res.slice(0, -1)
+  for (const line of parsed_ccs.blocks) {
+    res += '\n' + line + '; \n'
+  }
   res += '}'
   return res
 }
 
 const JTD = ({ data }) => {
   const [playground_view, set_playground_view] = useState('')
+  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
+    setCopied(false)
     set_playground_view(create_view(parse_nodes(data)))
   }, [data])
 
+  const showToast = () => {
+    setTimeout(() => {
+      setCopied(false)
+    }, 2000)
+    setCopied(true)
+    navigator.clipboard.writeText(playground_view)
+  }
+
+  const codeRef = useRef(null)
+
+  const [pressed, setPressed] = useState(false)
+
   return (
-    <CopyBlock
-      showLineNumbers={false}
-      text={playground_view}
-      language={'cpp'}
-      theme={{ ...atomOneLight, backgroundColor: 'inherit' }}
-      codeBlock
-    />
+    <>
+      <ToastContainer
+        style={{ width: '230px' }}
+        limit={1}
+        position="bottom-left"
+        autoClose={500}
+        transitionEnterTimeout={500}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      {playground_view && (
+        <div
+          style={{
+            overflowY: 'scroll',
+            marginLeft: '8px',
+            width: 'calc(100% - 16px)',
+            height: '90%',
+            fontSize: '14px',
+            fontFamily: '"Lucida Console", Courier, monospace',
+          }}
+        >
+          <button
+            className="copyBtn"
+            style={{ width: '84px' }}
+            onClick={showToast}
+          >
+            <img
+              style={{ width: '16px', marginRight: '4px' }}
+              src={copied ? CopiedIcon : CopyIcon}
+            />
+            {copied ? 'Copied' : 'Copy'}
+          </button>
+          <SyntaxHighlighter
+            language="cpp"
+            style={dracula}
+            customStyle={{
+              borderRadius: '5px',
+              margin: '0',
+              border: '1px solid rgb(221,221,221)',
+            }}
+          >
+            {playground_view}
+          </SyntaxHighlighter>
+        </div>
+      )}
+    </>
   )
 }
 

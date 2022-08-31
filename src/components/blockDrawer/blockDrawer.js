@@ -38,6 +38,7 @@ const BlockDrawer = ({ props }) => {
       sink: {},
       variable: {},
       comment: {},
+      function: {},
     }
     let idx = 0
     for (const [name, blockD] of Object.entries(blockData)) {
@@ -55,6 +56,7 @@ const BlockDrawer = ({ props }) => {
     categories: null,
     focus: null,
   })
+
   const handleAddBlock = name => {
     if (name) {
       const {
@@ -82,10 +84,13 @@ const BlockDrawer = ({ props }) => {
       >
         {state.categories &&
           Object.entries(state.categories).map(([categoryName, blocks]) => {
+            if (Object.keys(blocks).length === 0) return null
             return (
               <BlockList
                 key={categoryName}
-                blocks={Object.values(blocks)}
+                blocks={Object.values(blocks).sort((a, b) =>
+                  a.item.text.localeCompare(b.item.text)
+                )}
                 focus={state.focus}
               />
             )

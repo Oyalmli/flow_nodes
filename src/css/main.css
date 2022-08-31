@@ -9,8 +9,6 @@
   text-rendering: optimizeLegibility;
   -moz-osx-font-smoothing: grayscale;
   font-kerning: none;
-
-  font-family: 'Roboto', Helvetica, sans-serif;
   color: $black;
 }
 
@@ -27,6 +25,7 @@
 }
 
 body {
+  font-family: 'Roboto', Helvetica, sans-serif;
   background-color: $background-grey;
   overflow: hidden;
 }
@@ -47,6 +46,10 @@ body {
 
 .pointer {
   cursor: pointer;
+}
+
+.monospace {
+  font-family: 'Lucida Console', Courier, monospace;
 }
 
 .grab {
@@ -93,5 +96,21 @@ body {
 .node-disabled {
   .node {
     pointer-events: none !important;
+  }
+}
+
+.copyBtn {
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  border: 1px solid rgb(221, 221, 221);
+  padding: 8px;
+  background-color: white;
+  color: black;
+  position: absolute;
+  right: 16px;
+  top: 52px;
+  &:hover {
+    background-color: rgb(221, 221, 221);
   }
 }

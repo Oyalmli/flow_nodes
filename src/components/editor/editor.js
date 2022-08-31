@@ -35,7 +35,7 @@ import packageJSON from '../../../package.json'
 
 /* -------------------------------- Examples -------------------------------- */
 
-const exampleCount = 4
+const exampleCount = 2
 
 /* -------------------------------------------------------------------------- */
 
@@ -795,7 +795,7 @@ export default class Editor extends Component {
 // Header icon setup
 
 // const iconNames = ['Settings', 'File', 'Share', 'add']
-const iconNames = ['Settings', 'File', 'Share']
+const iconNames = ['File']
 // const iconFunctions = [null, null, null, this.addBlock]
 const iconFunctions = [null, null, null]
 const allFalse = [false, false, false]

@@ -16,7 +16,7 @@ _FlowBlocks.prototype.num_var = {
       type: ['object', 'func'],
     },
   ],
-  default: [50], // default here is for default inline data instead of input
+  default: [0, 'int64_t'], // default here is for default inline data instead of input
   eval_block: {
     pipeline_type: 'mod',
     type: 'function',
@@ -28,6 +28,11 @@ _FlowBlocks.prototype.num_var = {
     o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
   },
   inlineData: [
+    {
+      name: '',
+      description: 'Number of values to take',
+      type: ['object', 'string'],
+    },
     {
       name: '',
       description: 'Number of values to take',
@@ -50,7 +55,7 @@ _FlowBlocks.prototype.str_var = {
       type: ['object', 'string'],
     },
   ],
-  default: [50], // default here is for default inline data instead of input
+  default: ['"Hello world!"', 'std::string'], // default here is for default inline data instead of input
   eval_block: {
     pipeline_type: 'mod',
     type: 'function',
@@ -62,6 +67,11 @@ _FlowBlocks.prototype.str_var = {
     o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
   },
   inlineData: [
+    {
+      name: '',
+      description: 'Number of values to take',
+      type: ['object', 'string'],
+    },
     {
       name: '',
       description: 'Number of values to take',
@@ -84,7 +94,7 @@ _FlowBlocks.prototype.vector_var = {
       type: ['object', 'func'],
     },
   ],
-  default: [''], // default here is for default inline data instead of input
+  default: ['{}', 'std::vector<int>'], // default here is for default inline data instead of input
   eval_block: {
     pipeline_type: 'mod',
     type: 'function',

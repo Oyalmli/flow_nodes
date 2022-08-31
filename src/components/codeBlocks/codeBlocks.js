@@ -155,7 +155,7 @@ export default class CodeBlocks extends Component {
                 _removeClassNameByClass(thisBlock, 'node', 'no-events')
                 document.removeEventListener('mousemove', handleMove, true)
                 thisBlock.current.childNodes[0].className =
-                  thisBlock.current.childNodes[0].className.replace(
+                  thisBlock.current.childNodes?.[0].className.replace(
                     'grabbing',
                     'grab'
                   )
@@ -288,7 +288,6 @@ export default class CodeBlocks extends Component {
                 return
               }
             }
-
             // StartNode must have a lower or equal order to EndNode
             const [row_s, col_s] = startBlockInd
             const StartNode = this.props.data[row_s][col_s]
@@ -304,7 +303,6 @@ export default class CodeBlocks extends Component {
               order[StartNode.type] > order[EndNode.type]
             )
               return
-
             // Collect - output data first, input data follows
             ioEnd === 'input'
               ? this.props.collect(

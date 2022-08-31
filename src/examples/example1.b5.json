@@ -4,61 +4,88 @@
     "lineStyles": {},
     "blocks": {
       "0": {
-        "0": {
+        "1": {
           "name": "range",
           "source": "original",
-          "uuid": "7d03d5a3-b835-45dc-a528-1379e5bc2ed2",
-          "inlineData": [0, 1, 1],
+          "uuid": "f386f6ff-a84d-4dec-abc8-bd2bf3c22688",
+          "inlineData": [0, 100, 1],
           "type": "gen",
           "output": {
-            "0": [["1", "0", "0"]]
+            "0": [["1", "1", "0"]]
+          }
+        },
+        "2": {
+          "name": "addValue",
+          "source": "original",
+          "uuid": "376d1b53-3ea8-4555-9ea1-88f87b6abf32",
+          "input": {
+            "0": null
+          },
+          "inlineData": [1],
+          "type": "func",
+          "output": {
+            "0": [["1", "1", "1"]]
           }
         }
       },
       "1": {
         "0": {
-          "name": "take",
+          "name": "comment",
           "source": "original",
-          "uuid": "912285e3-fdab-4af2-8aa0-321e0ff47bc2",
-          "input": {
-            "0": ["0", "0", "0"]
-          },
-          "inlineData": [50],
-          "type": "mod",
-          "output": {
-            "0": [["2", "0", "0"]]
-          }
+          "uuid": "d9dcb7d0-87bb-412d-9ac9-f5102dc9d2fa",
+          "inlineData": ["Connect range to transform to complete the graph"],
+          "type": "comment"
         },
         "1": {
-          "name": "even",
+          "name": "transform",
           "source": "original",
-          "uuid": "2ceeef38-e9a5-4e36-86fd-d54c09a730d8",
+          "uuid": "e9c28f68-7dc8-498d-9d1e-96b156a29afc",
+          "input": {
+            "0": ["0", "1", "0"],
+            "1": ["0", "2", "0"]
+          },
+          "type": "pipe",
+          "output": {
+            "0": [["2", "1", "0"]]
+          }
+        },
+        "2": {
+          "name": "mod",
+          "source": "original",
+          "uuid": "bf97c356-40ed-4f02-8c33-46c8213f3884",
+          "input": {
+            "0": null
+          },
+          "inlineData": [15],
           "type": "func",
           "output": {
-            "0": [["2", "0", "1"]]
+            "0": [["2", "1", "1"]]
           }
         }
       },
       "2": {
-        "0": {
+        "1": {
           "name": "partition",
           "source": "original",
-          "uuid": "f82b33df-79f4-4fee-b25e-7f21978678f5",
+          "uuid": "4f32f94b-e50b-4055-be77-08ad1240e6bc",
           "input": {
-            "0": ["1", "0", "0"],
-            "1": ["1", "1", "0"]
+            "0": ["1", "1", "0"],
+            "1": ["1", "2", "0"]
           },
-          "type": "pipe",
+          "type": "redirect",
           "output": {
-            "0": [["3", "0", "0"]],
-            "1": [["3", "1", "0"]]
+            "0": [["3", "1", "0"]],
+            "1": [["3", "3", "0"]]
           }
         },
-        "1": {
-          "name": "addValue",
+        "2": {
+          "name": "mod",
           "source": "original",
-          "uuid": "263b9d68-86e6-489d-bf01-514cd33763a8",
-          "inlineData": [10],
+          "uuid": "4cf89c8d-42c2-42d7-b342-0d6f40073a8c",
+          "input": {
+            "0": null
+          },
+          "inlineData": [5],
           "type": "func",
           "output": {
             "0": [["3", "1", "1"]]
@@ -66,37 +93,89 @@
         }
       },
       "3": {
-        "0": {
+        "1": {
+          "name": "partition",
+          "source": "original",
+          "uuid": "1af2502b-f93a-4252-a86c-529d6048db50",
+          "input": {
+            "0": ["2", "1", "0"],
+            "1": ["2", "2", "0"]
+          },
+          "type": "redirect",
+          "output": {
+            "0": [["4", "1", "0"]],
+            "1": [["4", "3", "0"]]
+          }
+        },
+        "2": {
+          "name": "mod",
+          "source": "original",
+          "uuid": "89676fee-0aef-4b0a-97db-7aba3da44657",
+          "input": {
+            "0": null
+          },
+          "inlineData": [3],
+          "type": "func",
+          "output": {
+            "0": [["4", "1", "1"]]
+          }
+        },
+        "3": {
           "name": "printf",
           "source": "original",
-          "uuid": "db1aaa61-e749-486c-986e-e01c5145ed8e",
+          "uuid": "16ab5fd6-004e-4642-b80f-49fb23c08cb9",
           "input": {
-            "0": ["2", "0", "0"]
+            "0": ["2", "1", "1"]
           },
-          "inlineData": ["%d\\n"],
+          "inlineData": ["FizzBuzz\\n"],
           "type": "sink"
-        },
-        "1": {
-          "name": "transform",
-          "source": "original",
-          "uuid": "0c3e6c11-ba95-4068-b2fc-bced5c77ae1a",
-          "input": {
-            "0": ["2", "0", "1"],
-            "1": ["2", "1", "0"]
-          },
-          "type": "pipe",
-          "output": {
-            "0": [["4", "1", "0"]]
-          }
         }
       },
       "4": {
         "1": {
+          "name": "partition",
+          "source": "original",
+          "uuid": "acf61cbd-a961-4f21-a75f-0097adf07c09",
+          "input": {
+            "0": ["3", "1", "0"],
+            "1": ["3", "2", "0"]
+          },
+          "type": "redirect",
+          "output": {
+            "0": [["6", "3", "0"]],
+            "1": [["5", "3", "0"]]
+          }
+        },
+        "3": {
           "name": "printf",
           "source": "original",
-          "uuid": "6e3cb7f8-2d18-44c7-96ea-2103010637dd",
+          "uuid": "d29c2e3e-22ed-4beb-8e59-c6516d305440",
           "input": {
-            "0": ["3", "1", "0"]
+            "0": ["3", "1", "1"]
+          },
+          "inlineData": ["Buzz\\n"],
+          "type": "sink"
+        }
+      },
+      "5": {
+        "3": {
+          "name": "printf",
+          "source": "original",
+          "uuid": "90aa90e1-1dc3-4bd6-930e-eae5fa201478",
+          "input": {
+            "0": ["4", "1", "1"]
+          },
+          "inlineData": ["Fizz\\n"],
+          "type": "sink"
+        }
+      },
+      "6": {
+        "3": {
+          "name": "printf",
+          "source": "original",
+          "uuid": "55194c13-9b2c-45ee-9443-672cbd4a8ec9",
+          "input": {
+            "0": ["4", "1", "0"]
           },
           "inlineData": ["%d\\n"],
           "type": "sink"
@@ -109,5 +188,5 @@
     "function": [],
     "object": []
   },
-  "version": "0.2.2"
+  "version": "0.1.0"
 }
