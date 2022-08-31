@@ -188,8 +188,8 @@ _FlowBlocks.prototype.not = {
     type: 'function',
     name: 'not',
     variable_name: ([f]) => {
-      if (!Boolean(f) || f.length === 0) return `_not_`
-      return `_not__(${f})`
+      if (!Boolean(f) || f.length === 0) return `_not`
+      return `_not_(${f})`
     },
     func: () => '',
   },

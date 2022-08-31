@@ -1,17 +1,9 @@
-import React, { useEffect, useState, forwardRef, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import _b5BlocksObject from '../../../../b5.js/src/blocks/blocksObjectWrapper.js'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import dracula from 'react-syntax-highlighter/dist/esm/styles/prism/one-light.js'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { ToastContainer, toast, Slide } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import { AwesomeButton } from 'react-awesome-button'
-import 'react-awesome-button/dist/styles.css'
 import CopyIcon from '../../../../img/icons/copy.svg'
 import CopiedIcon from '../../../../img/icons/copied.svg'
-
-const zip = (a, b) =>
-  Array.from(Array(Math.max(b?.length, a?.length)), (_, i) => [a[i], b[i]])
 
 const io_obj_to_neighbour_arr = obj => {
   const { input = {}, output = {} } = obj
@@ -295,7 +287,6 @@ const parse_nodes = grid => {
     }
   }
 
-  //TODO: populate data in nodes using this
   let nodes = {}
   for (let [i, row] of Object.entries(blocks)) {
     for (let [j, cell] of Object.entries(row)) {
@@ -329,17 +320,6 @@ const parse_nodes = grid => {
     blocks: [...res.blocks].filter(Boolean),
   }
   return res
-}
-
-const to_str = (arr, indentLevel, sep = '\n') => {
-  let str = [...arr.map(s => indent(indentLevel) + s)].join(sep)
-  if (str) str += ';\n'
-  return str
-}
-
-const merge = (arr, key) => {
-  let res = new Set(arr.map(sarr => sarr[key]).flat())
-  return [...res] ?? []
 }
 
 const create_view = parsed_ccs => {
@@ -383,26 +363,8 @@ const JTD = ({ data }) => {
     navigator.clipboard.writeText(playground_view)
   }
 
-  const codeRef = useRef(null)
-
-  const [pressed, setPressed] = useState(false)
-
   return (
     <>
-      <ToastContainer
-        style={{ width: '230px' }}
-        limit={1}
-        position="bottom-left"
-        autoClose={500}
-        transitionEnterTimeout={500}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
       {playground_view && (
         <div
           style={{
