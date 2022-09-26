@@ -640,3 +640,40 @@ _FlowBlocks.prototype.func_plug = {
     },
   },
 }
+_FlowBlocks.prototype.func_dummy = {
+  text: 'Dummy',
+  type: 'func',
+  kind: 'iinput',
+  source: 'original',
+  description: 'Placeholder Block',
+  inputNodes: [
+    {
+      text: 'Func',
+      name: 'func',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+  ],
+  outputNodes: [
+    {
+      text: 'val',
+      name: 'number',
+      description: 'The new value',
+      type: ['object', 'func'],
+    },
+  ],
+  default: ['...'],
+  eval_block: {
+    variable_name: name => {
+      return `/*${name}*/`
+    },
+    func: () => '',
+  },
+  inlineData: [
+    {
+      name: 'add',
+      description: 'The value of number.',
+      type: ['object', 'string'],
+    },
+  ],
+}
