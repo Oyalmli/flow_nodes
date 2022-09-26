@@ -50,7 +50,7 @@ $h-s-gap: 14px;
   width: $search-bar-width;
   height: calc($block-list-height + $block-list-text-height);
   overflow: hidden;
-  overflow-x: scroll;
+  overflow-x: auto;
   scroll-behavior: smooth;
   white-space: nowrap;
   padding: 0;

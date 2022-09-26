@@ -1,7 +1,7 @@
 import _FlowBlocks from '../../main'
 import { valid } from '../../method'
 
-_FlowBlocks.prototype.addValue = {
+_FlowBlocks.prototype.func_addValue = {
   text: 'Add value',
   type: 'func',
   kind: 'iinput',
@@ -25,19 +25,12 @@ _FlowBlocks.prototype.addValue = {
   ],
   default: [0],
   eval_block: {
-    pipeline_type: 'funcs',
-    type: 'function',
-    name: 'addValue',
     variable_name: ([val, f]) => {
       if (!Boolean(f) || f.length === 0) return `_addValue(${val})`
       return `_addValue_(${val})(${f})`
     },
     func: () => '',
   },
-  run: function (p, o, draw, a) {
-    o[0] = valid(a, this.default[0])
-  },
-  // 'input' kind block special
   inlineData: [
     {
       name: 'add',
@@ -46,7 +39,7 @@ _FlowBlocks.prototype.addValue = {
     },
   ],
 }
-_FlowBlocks.prototype.subValue = {
+_FlowBlocks.prototype.func_subValue = {
   text: 'Sub Value',
   type: 'func',
   kind: 'normal',
@@ -82,11 +75,8 @@ _FlowBlocks.prototype.subValue = {
     },
     func: () => '',
   },
-  run: function (p, o, draw, a) {
-    o[0] = valid(a, this.default[0])
-  },
 }
-_FlowBlocks.prototype.even = {
+_FlowBlocks.prototype.func_even = {
   text: 'Even',
   type: 'func',
   kind: 'inline',
@@ -110,20 +100,14 @@ _FlowBlocks.prototype.even = {
   ],
   default: [true],
   eval_block: {
-    pipeline_type: 'funcs',
-    type: 'function',
-    name: 'even',
     variable_name: ([f]) => {
       if (!Boolean(f) || f.length === 0) return `_even`
       return `_even_(${f})`
     },
     func: () => '',
   },
-  run: function (p, o, draw, a, b) {
-    o[0] = a && b
-  },
 }
-_FlowBlocks.prototype.negate = {
+_FlowBlocks.prototype.func_negate = {
   text: 'Negate',
   type: 'func',
   kind: 'inline',
@@ -147,20 +131,14 @@ _FlowBlocks.prototype.negate = {
   ],
   default: [undefined],
   eval_block: {
-    pipeline_type: 'funcs',
-    type: 'function',
-    name: 'not',
     variable_name: ([f]) => {
       if (!Boolean(f) || f.length === 0) return `_negate`
       return `_negate_(${f})`
     },
     func: () => '',
   },
-  run: function (p, o, draw, a, b) {
-    o[0] = a && b
-  },
 }
-_FlowBlocks.prototype.not = {
+_FlowBlocks.prototype.func_not = {
   text: 'Not',
   type: 'func',
   kind: 'inline',
@@ -193,11 +171,8 @@ _FlowBlocks.prototype.not = {
     },
     func: () => '',
   },
-  run: function (p, o, draw, a, b) {
-    o[0] = a && b
-  },
 }
-_FlowBlocks.prototype.between = {
+_FlowBlocks.prototype.func_between = {
   text: '><',
   type: 'func',
   kind: 'iinput',
@@ -244,7 +219,7 @@ _FlowBlocks.prototype.between = {
     },
   ],
 }
-_FlowBlocks.prototype.outside = {
+_FlowBlocks.prototype.func_outside = {
   text: '<>',
   type: 'func',
   kind: 'iinput',
@@ -291,7 +266,7 @@ _FlowBlocks.prototype.outside = {
     },
   ],
 }
-_FlowBlocks.prototype.greaterThan = {
+_FlowBlocks.prototype.func_greaterThan = {
   text: '>',
   type: 'func',
   kind: 'normal',
@@ -331,7 +306,7 @@ _FlowBlocks.prototype.greaterThan = {
     o[0] = valid(a, this.default[0])
   },
 }
-_FlowBlocks.prototype.greaterThanIL = {
+_FlowBlocks.prototype.func_greaterThanIL = {
   text: '>',
   type: 'func',
   kind: 'iinput',
@@ -374,7 +349,7 @@ _FlowBlocks.prototype.greaterThanIL = {
     },
   ],
 }
-_FlowBlocks.prototype.greaterThanEquals = {
+_FlowBlocks.prototype.func_greaterThanEquals = {
   text: '>=',
   type: 'func',
   kind: 'iinput',
@@ -417,7 +392,7 @@ _FlowBlocks.prototype.greaterThanEquals = {
     },
   ],
 }
-_FlowBlocks.prototype.lessThan = {
+_FlowBlocks.prototype.func_lessThan = {
   text: '<',
   type: 'func',
   kind: 'normal',
@@ -457,7 +432,7 @@ _FlowBlocks.prototype.lessThan = {
     o[0] = valid(a, this.default[0])
   },
 }
-_FlowBlocks.prototype.lessThanEquals = {
+_FlowBlocks.prototype.func_lessThanEquals = {
   text: '<=',
   type: 'func',
   kind: 'iinput',
@@ -499,7 +474,7 @@ _FlowBlocks.prototype.lessThanEquals = {
     },
   ],
 }
-_FlowBlocks.prototype.mod = {
+_FlowBlocks.prototype.func_mod = {
   text: 'Mod',
   type: 'func',
   kind: 'iinput',
@@ -542,7 +517,7 @@ _FlowBlocks.prototype.mod = {
     },
   ],
 }
-_FlowBlocks.prototype.add = {
+_FlowBlocks.prototype.func_add = {
   text: 'Add',
   type: 'func',
   kind: 'inline',
@@ -576,7 +551,7 @@ _FlowBlocks.prototype.add = {
     o[0] = valid(a, this.default[0])
   },
 }
-_FlowBlocks.prototype.max = {
+_FlowBlocks.prototype.func_max = {
   text: 'Max',
   type: 'func',
   kind: 'inline',
@@ -605,11 +580,8 @@ _FlowBlocks.prototype.max = {
       return `auto max = [](auto a, auto b){ return a > b ? a : b; }`
     },
   },
-  run: function (p, o, draw, a) {
-    o[0] = valid(a, this.default[0])
-  },
 }
-_FlowBlocks.prototype.print_func = {
+_FlowBlocks.prototype.func_print = {
   text: 'Print',
   type: 'func',
   kind: 'inline',
@@ -639,11 +611,8 @@ _FlowBlocks.prototype.print_func = {
     },
     func: () => '',
   },
-  run: function (p, o, draw, a) {
-    o[0] = valid(a, this.default[0])
-  },
 }
-_FlowBlocks.prototype.plug = {
+_FlowBlocks.prototype.func_plug = {
   text: 'End',
   type: 'func',
   kind: 'inline',
@@ -669,8 +638,5 @@ _FlowBlocks.prototype.plug = {
     func: args => {
       return ``
     },
-  },
-  run: function (p, o, draw, a, b) {
-    o[0] = a && b
   },
 }

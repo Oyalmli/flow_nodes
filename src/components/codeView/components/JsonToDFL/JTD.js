@@ -4,6 +4,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import dracula from 'react-syntax-highlighter/dist/esm/styles/prism/one-light.js'
 import CopyIcon from '../../../../img/icons/copy.svg'
 import CopiedIcon from '../../../../img/icons/copied.svg'
+import DownloadIcon from '../../../../img/icons/download.svg'
 
 const io_obj_to_neighbour_arr = obj => {
   const { input = {}, output = {} } = obj
@@ -66,7 +67,6 @@ const inp = (grid, pblock) => {
   const inpArr = Object.values(pblock.input ?? {})
     .filter(Boolean)
     .map(([row, col]) => [row, col])
-
   return inpArr.map(([row, col]) => grid[row][col])
 }
 
@@ -77,6 +77,24 @@ const get_args = (grid, pblock) => {
 
 const indent = indent => {
   return '  '.repeat(indent)
+}
+
+const mod_traverse = (grid, pblock) => {
+  const {
+    p_type,
+    eval_block = { func: undefined, variable_name: undefined },
+    args = [],
+  } = pblock
+  const { func = undefined, variable_name = undefined } = eval_block
+  if (p_type === 'gen') {
+    return func(args)
+  }
+  const inputs = inp(grid, pblock)
+  const curr_args = [
+    ...args,
+    ...[inputs.length > 1 && place(1, grid, inputs[1]).t],
+  ].filter(e => e)
+  return func([curr_args, mod_traverse(grid, inputs[0])])
 }
 
 const place = (ind, grid, pblock) => {
@@ -92,6 +110,33 @@ const place = (ind, grid, pblock) => {
     case 'gen': {
       const { f, t } = place(ind, grid, out(grid, pblock)[0])
       return { f, t: [sep + func(args), t].join(`\n${sep}>>= `) }
+    }
+    case 'mod': {
+      const this_block = mod_traverse(grid, pblock)
+      let { f = [], t = [] } = place(ind, grid, out(grid, pblock)[0])
+      let tree = [sep + this_block, t.length > 0 ? t : undefined]
+        .filter(Boolean)
+        .join(`\n${sep}>>= `)
+      return { f, t: tree }
+    }
+    case 'dummy': {
+      let { f = [], t = [] } = place(ind, grid, out(grid, pblock)[0])
+      let tree = [
+        func([
+          ...args,
+          ...get_args(grid, pblock)
+            .map(e => {
+              const { f: fd, t: td } = place(ind, grid, e)
+              f = [...f, fd].flat()
+              return td
+            })
+            .flat(),
+        ]),
+        t.length > 0 ? t : undefined,
+      ]
+        .filter(Boolean)
+        .join(`\n${sep}>>= `)
+      return { f, t: tree }
     }
     case 'pipe': {
       let { f = [], t = [] } = place(ind, grid, out(grid, pblock)[0])
@@ -176,7 +221,7 @@ const place = (ind, grid, pblock) => {
       let t = []
       let f = []
       for (const curr of inp(grid, pblock)) {
-        if (curr.name === 'plug') continue
+        if (curr.name === 'func_plug') continue
         const { f: cf, t: ct } = place(ind, grid, curr)
         f = [...f, cf].flat()
         t = [...t, ct].flat()
@@ -231,7 +276,7 @@ const format_variables = variables => {
 }
 
 const find_gen = arr => {
-  return arr.find(e => e.type === 'gen')
+  return arr.findLast(e => e.type === 'mod') || arr.find(e => e.type === 'gen')
 }
 
 const parse_nodes = grid => {
@@ -346,6 +391,20 @@ const create_view = parsed_ccs => {
   return res
 }
 
+function save(filename, data) {
+  const blob = new Blob([data], { type: 'text/txt' })
+  if (window.navigator.msSaveOrOpenBlob) {
+    window.navigator.msSaveBlob(blob, filename)
+  } else {
+    const elem = window.document.createElement('a')
+    elem.href = window.URL.createObjectURL(blob)
+    elem.download = filename
+    document.body.appendChild(elem)
+    elem.click()
+    document.body.removeChild(elem)
+  }
+}
+
 const JTD = ({ data }) => {
   const [playground_view, set_playground_view] = useState('')
   const [copied, setCopied] = useState(false)
@@ -363,35 +422,88 @@ const JTD = ({ data }) => {
     navigator.clipboard.writeText(playground_view)
   }
 
+  const [isShown, setIsShown] = useState(false)
+
   return (
     <>
       {playground_view && (
         <div
           style={{
-            overflowY: 'scroll',
             marginLeft: '8px',
             width: 'calc(100% - 16px)',
-            height: '90%',
+            height: '100%',
             fontSize: '14px',
             fontFamily: '"Lucida Console", Courier, monospace',
           }}
         >
-          <button
-            className="copyBtn"
-            style={{ width: '84px' }}
-            onClick={showToast}
+          <div
+            className="exportDiv"
+            style={{
+              position: 'absolute',
+              right: '16px',
+              top: '52px',
+            }}
+            onMouseEnter={() => setIsShown(true)}
+            onMouseLeave={() => setIsShown(false)}
           >
-            <img
-              style={{ width: '16px', marginRight: '4px' }}
-              src={copied ? CopiedIcon : CopyIcon}
-            />
-            {copied ? 'Copied' : 'Copy'}
-          </button>
+            {!isShown && (
+              <button className="copyBtn">
+                {' '}
+                <img
+                  style={{ width: '16px', height: '16px', marginRight: '4px' }}
+                  src={DownloadIcon}
+                />
+                Download
+              </button>
+            )}
+            {isShown && (
+              <>
+                <button
+                  className="copyBtn"
+                  style={{
+                    width: '84px',
+                    '&:hover': { backgroundColor: 'rgb(221, 221, 221)' },
+                  }}
+                  onClick={showToast}
+                >
+                  <img
+                    style={{
+                      width: '16px',
+                      height: '16px',
+                      marginRight: '4px',
+                    }}
+                    src={copied ? CopiedIcon : CopyIcon}
+                  />
+                  {copied ? 'Copied' : 'Copy'}
+                </button>
+                <button
+                  className="copyBtn"
+                  style={{
+                    '&:hover': { backgroundColor: 'rgb(221, 221, 221)' },
+                  }}
+                  onClick={() => save('flowCode.cpp', playground_view)}
+                >
+                  <img
+                    style={{
+                      width: '16px',
+                      height: '16px',
+                      marginRight: '4px',
+                    }}
+                    src={DownloadIcon}
+                  />
+                  Download
+                </button>
+              </>
+            )}
+          </div>
+
           <SyntaxHighlighter
             language="cpp"
             style={dracula}
             customStyle={{
               borderRadius: '5px',
+              overflowY: 'auto',
+              height: 'calc(100% - 52px)',
               margin: '0',
               border: '1px solid rgb(221,221,221)',
             }}

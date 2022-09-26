@@ -4,180 +4,178 @@
     "lineStyles": {},
     "blocks": {
       "0": {
-        "1": {
-          "name": "range",
+        "0": {
+          "name": "gen_range",
           "source": "original",
-          "uuid": "f386f6ff-a84d-4dec-abc8-bd2bf3c22688",
+          "uuid": "c3542462-44a9-47b1-86ef-9ac48e5dd50f",
           "inlineData": [0, 100, 1],
           "type": "gen",
           "output": {
-            "0": [["1", "1", "0"]]
+            "0": []
           }
         },
-        "2": {
-          "name": "addValue",
+        "1": {
+          "name": "comment",
           "source": "original",
-          "uuid": "376d1b53-3ea8-4555-9ea1-88f87b6abf32",
+          "uuid": "879ad8a3-fd92-44e7-b96c-0fb68dd98449",
+          "inlineData": ["Connect Range to Transform to complete graph"],
+          "type": "comment"
+        },
+        "2": {
+          "name": "func_addValue",
+          "source": "original",
+          "uuid": "a3473d55-25f7-406b-a82a-d9733d7f730e",
           "input": {
             "0": null
           },
           "inlineData": [1],
           "type": "func",
           "output": {
-            "0": [["1", "1", "1"]]
+            "0": [["1", "0", "1"]]
           }
         }
       },
       "1": {
         "0": {
-          "name": "comment",
+          "name": "pipe_transform",
           "source": "original",
-          "uuid": "d9dcb7d0-87bb-412d-9ac9-f5102dc9d2fa",
-          "inlineData": ["Connect range to transform to complete the graph"],
-          "type": "comment"
-        },
-        "1": {
-          "name": "transform",
-          "source": "original",
-          "uuid": "e9c28f68-7dc8-498d-9d1e-96b156a29afc",
+          "uuid": "3a20a216-b839-4a58-9f37-09f129aa0f01",
           "input": {
-            "0": ["0", "1", "0"],
+            "0": null,
             "1": ["0", "2", "0"]
           },
           "type": "pipe",
           "output": {
-            "0": [["2", "1", "0"]]
+            "0": [["2", "0", "0"]]
           }
         },
-        "2": {
-          "name": "mod",
+        "1": {
+          "name": "func_mod",
           "source": "original",
-          "uuid": "bf97c356-40ed-4f02-8c33-46c8213f3884",
+          "uuid": "9efdb4c9-1291-459f-b184-71e505064c89",
           "input": {
             "0": null
           },
           "inlineData": [15],
           "type": "func",
           "output": {
-            "0": [["2", "1", "1"]]
+            "0": [["2", "0", "1"]]
           }
         }
       },
       "2": {
-        "1": {
+        "0": {
           "name": "partition",
           "source": "original",
-          "uuid": "4f32f94b-e50b-4055-be77-08ad1240e6bc",
+          "uuid": "61859c7f-4ca8-46c6-84bf-12a51579a146",
           "input": {
-            "0": ["1", "1", "0"],
-            "1": ["1", "2", "0"]
+            "0": ["1", "0", "0"],
+            "1": ["1", "1", "0"]
           },
           "type": "redirect",
           "output": {
-            "0": [["3", "1", "0"]],
-            "1": [["3", "3", "0"]]
+            "0": [["3", "0", "0"]],
+            "1": [["4", "2", "0"]]
           }
         },
-        "2": {
-          "name": "mod",
+        "1": {
+          "name": "func_mod",
           "source": "original",
-          "uuid": "4cf89c8d-42c2-42d7-b342-0d6f40073a8c",
+          "uuid": "a7ed0df2-7b36-41ef-bb61-923864d905e7",
           "input": {
             "0": null
           },
           "inlineData": [5],
           "type": "func",
           "output": {
-            "0": [["3", "1", "1"]]
+            "0": [["3", "0", "1"]]
           }
         }
       },
       "3": {
-        "1": {
+        "0": {
           "name": "partition",
           "source": "original",
-          "uuid": "1af2502b-f93a-4252-a86c-529d6048db50",
+          "uuid": "a0d14aac-4fb4-4120-bf9c-ca14ecfe22fd",
           "input": {
-            "0": ["2", "1", "0"],
-            "1": ["2", "2", "0"]
+            "0": ["2", "0", "0"],
+            "1": ["2", "1", "0"]
           },
           "type": "redirect",
           "output": {
-            "0": [["4", "1", "0"]],
-            "1": [["4", "3", "0"]]
+            "0": [["4", "0", "0"]],
+            "1": [["5", "2", "0"]]
           }
         },
-        "2": {
-          "name": "mod",
+        "1": {
+          "name": "func_mod",
           "source": "original",
-          "uuid": "89676fee-0aef-4b0a-97db-7aba3da44657",
+          "uuid": "f52cff2c-b3b8-4e06-8681-aad2fedb1653",
           "input": {
             "0": null
           },
           "inlineData": [3],
           "type": "func",
           "output": {
-            "0": [["4", "1", "1"]]
+            "0": [["4", "0", "1"]]
+          }
+        }
+      },
+      "4": {
+        "0": {
+          "name": "partition",
+          "source": "original",
+          "uuid": "ced3806f-72d7-4535-8856-570eb86e02e0",
+          "input": {
+            "0": ["3", "0", "0"],
+            "1": ["3", "1", "0"]
+          },
+          "type": "redirect",
+          "output": {
+            "0": [["5", "0", "0"]],
+            "1": [["5", "1", "0"]]
           }
         },
-        "3": {
+        "2": {
           "name": "printf",
           "source": "original",
-          "uuid": "16ab5fd6-004e-4642-b80f-49fb23c08cb9",
+          "uuid": "2c082186-c5eb-4050-bead-bc927a611bec",
           "input": {
-            "0": ["2", "1", "1"]
+            "0": ["2", "0", "1"]
           },
           "inlineData": ["FizzBuzz\\n"],
           "type": "sink"
         }
       },
-      "4": {
-        "1": {
-          "name": "partition",
-          "source": "original",
-          "uuid": "acf61cbd-a961-4f21-a75f-0097adf07c09",
-          "input": {
-            "0": ["3", "1", "0"],
-            "1": ["3", "2", "0"]
-          },
-          "type": "redirect",
-          "output": {
-            "0": [["6", "3", "0"]],
-            "1": [["5", "3", "0"]]
-          }
-        },
-        "3": {
-          "name": "printf",
-          "source": "original",
-          "uuid": "d29c2e3e-22ed-4beb-8e59-c6516d305440",
-          "input": {
-            "0": ["3", "1", "1"]
-          },
-          "inlineData": ["Buzz\\n"],
-          "type": "sink"
-        }
-      },
       "5": {
-        "3": {
+        "0": {
           "name": "printf",
           "source": "original",
-          "uuid": "90aa90e1-1dc3-4bd6-930e-eae5fa201478",
+          "uuid": "38911f8f-c01a-4c96-a839-ad5d9cb6800c",
           "input": {
-            "0": ["4", "1", "1"]
+            "0": ["4", "0", "0"]
+          },
+          "inlineData": ["%d\\n"],
+          "type": "sink"
+        },
+        "1": {
+          "name": "printf",
+          "source": "original",
+          "uuid": "e8a22ecf-6aab-4080-8f99-c1e40b4c205e",
+          "input": {
+            "0": ["4", "0", "1"]
           },
           "inlineData": ["Fizz\\n"],
           "type": "sink"
-        }
-      },
-      "6": {
-        "3": {
+        },
+        "2": {
           "name": "printf",
           "source": "original",
-          "uuid": "55194c13-9b2c-45ee-9443-672cbd4a8ec9",
+          "uuid": "8e40d8c3-c22a-428d-8df5-4c93f6b546fa",
           "input": {
-            "0": ["4", "1", "0"]
+            "0": ["3", "0", "1"]
           },
-          "inlineData": ["%d\\n"],
+          "inlineData": ["Buzz\\n"],
           "type": "sink"
         }
       }

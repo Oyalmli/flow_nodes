@@ -8,6 +8,7 @@ export const colorPalette = {
   function: '#50d764',
   object: '#44d7b6',
   draw: '#f35c87',
+  dummy: '#ffebb7',
   library: '#b55bcd',
   comment: '#ffebb7',
   tip: '#ffd31d',

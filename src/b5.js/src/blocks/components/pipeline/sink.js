@@ -217,16 +217,13 @@ _FlowBlocks.prototype.sink_set_var = {
     },
   ],
   outputNodes: null,
-  default: [undefined], // default here is for default inline data instead of input
+  default: [undefined],
   eval_block: {
     pipeline_type: 'sink',
     type: 'component',
     func: data => {
       return `sink::set_var(${data})`
     },
-  },
-  run: function (p, o, draw, input, a) {
-    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
   },
 }
 _FlowBlocks.prototype.out_block = {
@@ -250,19 +247,14 @@ _FlowBlocks.prototype.out_block = {
       return ``
     },
   },
-  run: function (p, o, draw, a) {
-    o[0] = valid(a, this.default[0])
-  },
   inlineData: [],
 }
-
-/*
-_FlowBlocks.prototype.print = {
-  text: 'Print',
+_FlowBlocks.prototype.sink_dummy = {
+  text: 'Dummy',
   type: 'sink',
   kind: 'iinput',
   source: 'original',
-  description: 'Print the value',
+  description: 'Take a given number of values from the generator',
   inputNodes: [
     {
       text: 'In',
@@ -272,25 +264,17 @@ _FlowBlocks.prototype.print = {
     },
   ],
   outputNodes: null,
-  default: ['\n'], // default here is for default inline data instead of input
+  default: ['...'],
   eval_block: {
-    pipeline_type: 'sink',
-    type: 'component',
     func: data => {
-      console.log(data)
-      return `sink::print('${data}')`
+      return `sink::/*${data}*/()`
     },
   },
-  run: function (p, o, draw, input, a) {
-    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
-  },
-  // 'slider' kind block special
   inlineData: [
     {
-      name: 'Seperator',
+      name: 'Text',
       description: 'Number of values to take',
       type: ['object', 'string'],
     },
   ],
 }
-*/

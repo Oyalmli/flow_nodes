@@ -78,6 +78,10 @@ $node-0-1-width: 110px;
       box-shadow: $block-shadow-style color-mod($variable a($hover-op));
     }
 
+    .dummy {
+      box-shadow: $block-shadow-style color-mod($dummy a($hover-op));
+    }
+
     .function {
       box-shadow: $block-shadow-style color-mod($function a($hover-op));
     }
@@ -213,6 +217,15 @@ $node-0-1-width: 110px;
     }
   }
 
+  .dummy,
+  .dummyConnect {
+    background-color: $dummy;
+
+    .nodeText {
+      color: color-mod($dummy blend($black 50%));
+    }
+  }
+
   .function,
   .functionConnect {
     background-color: $function;
@@ -280,6 +293,10 @@ $node-0-1-width: 110px;
 
     .variableNode {
       border: $node-border-style $variable;
+    }
+
+    .dummyNode {
+      border: $node-border-style $dummy;
     }
 
     .functionNode {

@@ -33,12 +33,14 @@ const BlockDrawer = ({ props }) => {
     let res = {
       func: {},
       gen: {},
-      /*mod: {},*/ pipe: {},
+      mod: {},
+      pipe: {},
       redirect: {},
       sink: {},
       variable: {},
       comment: {},
       function: {},
+      dummy: {},
     }
     let idx = 0
     for (const [name, blockD] of Object.entries(blockData)) {

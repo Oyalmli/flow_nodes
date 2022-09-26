@@ -1,7 +1,7 @@
 import _FlowBlocks from '../../main'
 import { valid } from '../../method'
 
-_FlowBlocks.prototype.transform = {
+_FlowBlocks.prototype.pipe_transform = {
   text: 'Transform',
   type: 'pipe',
   kind: 'normal',
@@ -31,17 +31,12 @@ _FlowBlocks.prototype.transform = {
   ],
   default: [0, null],
   eval_block: {
-    pipeline_type: 'pipe',
-    type: 'component',
     func: args => {
       return `pipe::transform(${args})`
     },
   },
-  run: function (p, o, draw, a) {
-    o[0] = valid(a, this.default[0])
-  },
 }
-_FlowBlocks.prototype.transform_s = {
+_FlowBlocks.prototype.pipe_transform_s = {
   text: 'Transform S',
   type: 'pipe',
   kind: 'normal',
@@ -77,17 +72,12 @@ _FlowBlocks.prototype.transform_s = {
   ],
   default: [0, null],
   eval_block: {
-    pipeline_type: 'pipe',
-    type: 'component',
     func: ([func, variable]) => {
       return `pipe::transform_s(${func}, ${variable})`
     },
   },
-  run: function (p, o, draw, a) {
-    o[0] = valid(a, this.default[0])
-  },
 }
-_FlowBlocks.prototype.take = {
+_FlowBlocks.prototype.pipe_take = {
   text: 'Take',
   type: 'pipe',
   kind: 'iinput',
@@ -109,18 +99,12 @@ _FlowBlocks.prototype.take = {
       type: ['object', 'number'],
     },
   ],
-  default: [50], // default here is for default inline data instead of input
+  default: [50],
   eval_block: {
-    pipeline_type: 'mod',
-    type: 'function',
     func: data => {
       return `pipe::take(${data})`
     },
   },
-  run: function (p, o, draw, input, a) {
-    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
-  },
-  // 'slider' kind block special
   inlineData: [
     {
       name: 'Take',
@@ -129,7 +113,7 @@ _FlowBlocks.prototype.take = {
     },
   ],
 }
-_FlowBlocks.prototype.intersperse = {
+_FlowBlocks.prototype.pipe_intersperse = {
   text: 'Intersperse',
   type: 'pipe',
   kind: 'iinput',
@@ -151,16 +135,12 @@ _FlowBlocks.prototype.intersperse = {
       type: ['object', 'number'],
     },
   ],
-  default: [0], // default here is for default inline data instead of input
+  default: [0],
   eval_block: {
     func: data => {
       return `pipe::intersperse(${data})`
     },
   },
-  run: function (p, o, draw, input, a) {
-    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
-  },
-  // 'slider' kind block special
   inlineData: [
     {
       name: 'Val',
@@ -169,7 +149,7 @@ _FlowBlocks.prototype.intersperse = {
     },
   ],
 }
-_FlowBlocks.prototype.chunks = {
+_FlowBlocks.prototype.pipe_chunks = {
   text: 'Chunks',
   type: 'pipe',
   kind: 'iinput',
@@ -191,7 +171,7 @@ _FlowBlocks.prototype.chunks = {
       type: ['object', 'number'],
     },
   ],
-  default: ['int64_t', 10], // default here is for default inline data instead of input
+  default: ['int64_t', 10],
   eval_block: {
     pipeline_type: 'mod',
     type: 'function',
@@ -199,10 +179,6 @@ _FlowBlocks.prototype.chunks = {
       return `pipe::chunks<${tp}, ${size}>()`
     },
   },
-  run: function (p, o, draw, input, a) {
-    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
-  },
-  // 'slider' kind block special
   inlineData: [
     {
       name: 'Type',
@@ -216,7 +192,7 @@ _FlowBlocks.prototype.chunks = {
     },
   ],
 }
-_FlowBlocks.prototype.drop_while = {
+_FlowBlocks.prototype.pipe_drop_while = {
   text: 'Drop While',
   type: 'pipe',
   kind: 'normal',
@@ -245,16 +221,13 @@ _FlowBlocks.prototype.drop_while = {
     },
   ],
   default: [0, null],
-  run: function (p, o, draw, a) {
-    o[0] = valid(a, this.default[0])
-  },
   eval_block: {
     func: args => {
       return `pipe::drop_while(${args})`
     },
   },
 }
-_FlowBlocks.prototype.drop = {
+_FlowBlocks.prototype.pipe_drop = {
   text: 'Drop',
   type: 'pipe',
   kind: 'iinput',
@@ -276,7 +249,7 @@ _FlowBlocks.prototype.drop = {
       type: ['object', 'number'],
     },
   ],
-  default: [0], // default here is for default inline data instead of input
+  default: [0],
   eval_block: {
     pipeline_type: 'mod',
     type: 'function',
@@ -292,7 +265,7 @@ _FlowBlocks.prototype.drop = {
     },
   ],
 }
-_FlowBlocks.prototype.filter = {
+_FlowBlocks.prototype.pipe_filter = {
   text: 'Filter',
   type: 'pipe',
   kind: 'normal',
@@ -321,16 +294,13 @@ _FlowBlocks.prototype.filter = {
     },
   ],
   default: [0, null],
-  run: function (p, o, draw, a) {
-    o[0] = valid(a, this.default[0])
-  },
   eval_block: {
     func: args => {
       return `pipe::filter(${args})`
     },
   },
 }
-_FlowBlocks.prototype.set_state = {
+_FlowBlocks.prototype.pipe_set_state = {
   text: 'Set State',
   type: 'pipe',
   kind: 'normal',
@@ -366,16 +336,13 @@ _FlowBlocks.prototype.set_state = {
     },
   ],
   default: [0, null],
-  run: function (p, o, draw, a) {
-    o[0] = valid(a, this.default[0])
-  },
   eval_block: {
     func: ([func, variable]) => {
       return `pipe::set_state(${func}, ${variable})`
     },
   },
 }
-_FlowBlocks.prototype.stride = {
+_FlowBlocks.prototype.pipe_stride = {
   text: 'Stride',
   type: 'pipe',
   kind: 'iinput',
@@ -397,18 +364,12 @@ _FlowBlocks.prototype.stride = {
       type: ['object', 'number'],
     },
   ],
-  default: [50], // default here is for default inline data instead of input
+  default: [50],
   eval_block: {
-    pipeline_type: 'mod',
-    type: 'function',
     func: data => {
       return `pipe::stride(${data})`
     },
   },
-  run: function (p, o, draw, input, a) {
-    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
-  },
-  // 'slider' kind block special
   inlineData: [
     {
       name: 'Every Nth',
@@ -417,7 +378,7 @@ _FlowBlocks.prototype.stride = {
     },
   ],
 }
-_FlowBlocks.prototype.tap = {
+_FlowBlocks.prototype.pipe_tap = {
   text: 'Tap',
   type: 'pipe',
   kind: 'normal',
@@ -446,16 +407,13 @@ _FlowBlocks.prototype.tap = {
     },
   ],
   default: [0, null],
-  run: function (p, o, draw, a) {
-    o[0] = valid(a, this.default[0])
-  },
   eval_block: {
     func: args => {
       return `pipe::tap(${args})`
     },
   },
 }
-_FlowBlocks.prototype.tee = {
+_FlowBlocks.prototype.pipe_tee = {
   text: 'Tee',
   type: 'pipe',
   p_type: 'tee',
@@ -484,17 +442,14 @@ _FlowBlocks.prototype.tee = {
       type: ['object', 'number'],
     },
   ],
-  default: [50], // default here is for default inline data instead of input
+  default: [50],
   eval_block: {
     func: data => {
       return `pipe::tee(${data})`
     },
   },
-  run: function (p, o, draw, input, a) {
-    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
-  },
 }
-_FlowBlocks.prototype.moving_avg = {
+_FlowBlocks.prototype.pipe_moving_avg = {
   text: 'Moving Average',
   type: 'pipe',
   kind: 'iinput',
@@ -516,10 +471,8 @@ _FlowBlocks.prototype.moving_avg = {
       type: ['object', 'number'],
     },
   ],
-  default: ['double', 5], // default here is for default inline data instead of input
+  default: ['double', 5],
   eval_block: {
-    pipeline_type: 'mod',
-    type: 'function',
     func: ([type, num]) => {
       return `pipe::moving_avg<${type}, ${num}>()`
     },
@@ -565,17 +518,14 @@ _FlowBlocks.prototype.pipe_set_var = {
       type: ['object', 'number'],
     },
   ],
-  default: [undefined], // default here is for default inline data instead of input
+  default: [undefined],
   eval_block: {
     func: data => {
       return `pipe::set_var(${data})`
     },
   },
-  run: function (p, o, draw, input, a) {
-    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
-  },
 }
-_FlowBlocks.prototype.restricted_avg = {
+_FlowBlocks.prototype.pipe_restricted_avg = {
   text: 'Restricted Avg',
   type: 'pipe',
   kind: 'iinput',
@@ -619,14 +569,11 @@ _FlowBlocks.prototype.restricted_avg = {
       type: ['object', 'number'],
     },
   ],
-  default: ['double', 5, undefined, undefined], // default here is for default inline data instead of input
+  default: ['double', 5, undefined, undefined],
   eval_block: {
     func: ([tp, to_take, max_diff, skip]) => {
       return `restricted_avg<${tp}, ${to_take}>(${max_diff},${skip})`
     },
-  },
-  run: function (p, o, draw, input, a) {
-    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
   },
 }
 _FlowBlocks.prototype.pipe_get_var = {
@@ -657,13 +604,46 @@ _FlowBlocks.prototype.pipe_get_var = {
       type: ['object', 'number'],
     },
   ],
-  default: [undefined], // default here is for default inline data instead of input
+  default: [undefined],
   eval_block: {
     func: data => {
       return `pipe::get_var(${data})`
     },
   },
-  run: function (p, o, draw, input, a) {
-    o[0] = (valid(a, this.default[0]) * valid(input, 100)) / 100
+}
+_FlowBlocks.prototype.pipe_dummy = {
+  text: 'Dummy',
+  type: 'pipe',
+  kind: 'iinput',
+  source: 'original',
+  description: 'Dummy block',
+  inputNodes: [
+    {
+      text: 'In',
+      name: 'in',
+      description: 'The incoming value',
+      type: ['object', 'number'],
+    },
+  ],
+  outputNodes: [
+    {
+      text: 'Out',
+      name: 'out',
+      description: 'the outgoing value',
+      type: ['object', 'number'],
+    },
+  ],
+  default: ['...'],
+  eval_block: {
+    func: args => {
+      return `pipe::/*${args}*/()`
+    },
   },
+  inlineData: [
+    {
+      name: 'text',
+      description: 'Number of values to drop',
+      type: ['object', 'string'],
+    },
+  ],
 }

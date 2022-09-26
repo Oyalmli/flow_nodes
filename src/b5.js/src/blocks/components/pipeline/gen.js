@@ -1,7 +1,7 @@
 import _FlowBlocks from '../../main'
 import { valid } from '../../method'
 
-_FlowBlocks.prototype.range = {
+_FlowBlocks.prototype.gen_range = {
   text: 'Range',
   type: 'gen',
   kind: 'input',
@@ -28,9 +28,6 @@ _FlowBlocks.prototype.range = {
       return `gen::range(${data})`
     },
   },
-  run: function (p, o, draw, a) {
-    o[0] = valid(a, this.default[0])
-  },
   inlineData: [
     {
       name: 'low',
@@ -49,7 +46,7 @@ _FlowBlocks.prototype.range = {
     },
   ],
 }
-_FlowBlocks.prototype.in = {
+_FlowBlocks.prototype.gen_in = {
   text: 'In',
   type: 'gen',
   kind: 'inline',
@@ -73,16 +70,10 @@ _FlowBlocks.prototype.in = {
   ],
   default: [],
   eval_block: {
-    func: data => {
-      return ``
-    },
+    func: () => ``,
   },
-  run: function (p, o, draw, a) {
-    o[0] = valid(a, this.default[0])
-  },
-  inlineData: [],
 }
-_FlowBlocks.prototype.counter = {
+_FlowBlocks.prototype.gen_counter = {
   text: 'Counter',
   type: 'gen',
   kind: 'inline',
@@ -99,15 +90,10 @@ _FlowBlocks.prototype.counter = {
   ],
   default: [],
   eval_block: {
-    func: data => {
-      return `gen::counter<size_t>()`
-    },
-  },
-  run: function (p, o, draw, a) {
-    o[0] = valid(a, this.default[0])
+    func: () => `gen::counter<uint>()`,
   },
 }
-_FlowBlocks.prototype.file = {
+_FlowBlocks.prototype.gen_file = {
   text: 'File',
   type: 'gen',
   kind: 'input',
@@ -128,9 +114,6 @@ _FlowBlocks.prototype.file = {
       return `gen::file<${tp}>(${source})`
     },
   },
-  run: function (p, o, draw, a) {
-    o[0] = valid(a, this.default[0])
-  },
   inlineData: [
     {
       name: 'type',
@@ -144,7 +127,7 @@ _FlowBlocks.prototype.file = {
     },
   ],
 }
-_FlowBlocks.prototype.sine = {
+_FlowBlocks.prototype.gen_sine = {
   text: 'Sine',
   type: 'gen',
   kind: 'input',
@@ -167,9 +150,6 @@ _FlowBlocks.prototype.sine = {
       )})`
     },
   },
-  run: function (p, o, draw, a) {
-    o[0] = valid(a, this.default[0])
-  },
   inlineData: [
     {
       name: 'resolution',
@@ -188,7 +168,7 @@ _FlowBlocks.prototype.sine = {
     },
   ],
 }
-_FlowBlocks.prototype.value = {
+_FlowBlocks.prototype.gen_value = {
   text: 'Value',
   type: 'gen',
   kind: 'input',
@@ -209,14 +189,40 @@ _FlowBlocks.prototype.value = {
       return `gen::value(${data})`
     },
   },
-  run: function (p, o, draw, a) {
-    o[0] = valid(a, this.default[0])
-  },
   inlineData: [
     {
       name: 'val',
       description: 'The value to repeat',
       type: ['object', 'number'],
+    },
+  ],
+}
+_FlowBlocks.prototype.gen_dummy = {
+  text: 'Dummy',
+  type: 'gen',
+  kind: 'input',
+  source: 'original',
+  description: 'Creates a range from low to high with the given step size',
+  inputNodes: null,
+  outputNodes: [
+    {
+      text: 'val',
+      name: 'number',
+      description: 'The new value',
+      type: ['object', 'number'],
+    },
+  ],
+  default: ['...'],
+  eval_block: {
+    func: data => {
+      return `gen::/*${data}*/()`
+    },
+  },
+  inlineData: [
+    {
+      name: '',
+      description: 'The value of number.',
+      type: ['object', 'string'],
     },
   ],
 }

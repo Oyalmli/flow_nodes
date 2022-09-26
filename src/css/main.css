@@ -99,7 +99,7 @@ body {
   }
 }
 
-.copyBtn {
+.exportDiv {
   display: flex;
   align-items: center;
   border-radius: 5px;
@@ -110,6 +110,16 @@ body {
   position: absolute;
   right: 16px;
   top: 52px;
+}
+
+.copyBtn {
+  display: flex;
+  padding: 8px;
+  border-radius: 5px;
+  align-items: center;
+  color: black;
+  height: 32px;
+  background-color: inherit;
   &:hover {
     background-color: rgb(221, 221, 221);
   }

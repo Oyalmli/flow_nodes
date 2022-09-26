@@ -41,7 +41,41 @@ _FlowBlocks.prototype.comment = {
   ],
   default: [''],
   ignore: true,
-  run: function (p, o, draw) {}, // This block is ignored by b5
+}
+
+_FlowBlocks.prototype.dummy = {
+  text: 'Dummy',
+  type: 'dummy',
+  kind: 'iinput',
+  source: 'original',
+  description: 'Placeholder block',
+  inputNodes: [
+    {
+      text: 'In',
+      name: 'in',
+      description: 'The incoming value',
+      type: ['object', 'string'],
+    },
+  ],
+  outputNodes: [
+    {
+      text: 'Out',
+      name: 'out',
+      description: 'Outgoing value',
+      type: ['object', 'func'],
+    },
+  ],
+  default: ['...'],
+  eval_block: {
+    func: ([name]) => `/*TODO::${name}*/`,
+  },
+  inlineData: [
+    {
+      name: 'Name',
+      description: 'Name of dummy block',
+      type: ['object', 'string'],
+    },
+  ],
 }
 
 export default _FlowBlocks

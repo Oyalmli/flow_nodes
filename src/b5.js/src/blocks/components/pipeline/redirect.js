@@ -43,7 +43,7 @@ _FlowBlocks.prototype.partition = {
     pipeline_type: 'pipe',
     type: 'component',
     func: ([func, a, b]) => {
-      return `pipe::partition(${func},\n\t${a}, \n\t${b})`
+      return `rdir::partition(${func},\n\t${a}, \n\t${b})`
     },
   },
 }
@@ -79,7 +79,7 @@ _FlowBlocks.prototype.fork = {
     pipeline_type: 'pipe',
     type: 'component',
     func: outs => {
-      return `pipe::fork(${outs})`
+      return `rdir::fork(${outs})`
     },
   },
 }

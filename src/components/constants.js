@@ -12,6 +12,7 @@ export const colorPalette = {
   draw: '#f35c87',
   library: '#b55bcd',
   comment: '#ffebb7',
+  dummy: '#ffebb7',
   tip: '#ffd31d',
   alert: '#cf1b1b',
   selected: '#07689f',
