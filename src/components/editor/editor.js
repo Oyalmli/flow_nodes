@@ -678,7 +678,7 @@ export default class Editor extends Component {
 
           <p className="dev issueTag">
             <a
-              href="https://www.jpl.design/b5"
+              href="https://youtu.be/-FFd0gF53uE"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -690,7 +690,7 @@ export default class Editor extends Component {
               v{method.parseVersion(packageJSON.version, true)}
               <span className="text-options">
                 <a
-                  href="https://www.jpl.design/b5"
+                  href="https://youtu.be/-FFd0gF53uE"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -710,7 +710,7 @@ export default class Editor extends Component {
           )}
 
           <a
-            href="https://github.com/peilingjiang/b5"
+            href="https://github.com/Oyalmli/flow_nodes"
             rel="noopener noreferrer"
             target="_blank"
           >
